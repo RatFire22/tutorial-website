@@ -1,0 +1,63 @@
+---
+title: "Rust for Web Engineers: Systems & High-Throughput Microservices"
+description: "A practical transition guide for web developers to build memory-safe, fearless concurrent microservices using Rust, Tokio, and Axum."
+date: "Oct 18, 2026"
+readTime: "14 min read"
+category: "Rust"
+tagClass: "tag-rust"
+tags: ["Rust", "Systems", "Tokio", "Concurrency"]
+author:
+  name: "Alex Chen"
+  role: "Senior Software Engineer"
+  avatar: "AC"
+featured: false
+---
+
+## Introduction
+
+As high-traffic web applications encounter scalability limits, migrating CPU-bound workloads from scripting languages to Rust has become a mainstream engineering pattern. With zero-cost abstractions, guaranteed memory safety at compile time, and fearless concurrency, Rust excels at low-latency services.
+
+## Writing an Asynchronous Endpoint with Axum
+
+Let's look at how intuitive a modern Rust HTTP microservice can be using the `axum` web framework and `tokio` async runtime:
+
+```rust
+use axum::{routing::get, Json, Router};
+use serde::Serialize;
+use std::net::SocketAddr;
+
+#[derive(Serialize)]
+struct StatusResponse {
+    status: &'static str,
+    uptime_seconds: u64,
+}
+
+async fn health_check() -> Json<StatusResponse> {
+    Json(StatusResponse {
+        status: "healthy",
+        uptime_seconds: 3600,
+    })
+}
+
+#[tokio::main]
+async fn main() {
+    let app = Router::new().route("/health", get(health_check));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
+    
+    println!("Server running on {}", addr);
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+```
+
+<Callout type="info" title="Zero Memory Allocations">
+Notice how the response struct uses static string slices (`&'static str`), allowing the serialization engine to avoid unnecessary heap allocations during high-frequency health probes.
+</Callout>
+
+## Understanding Ownership and Channels
+
+In Rust, shared memory concurrency is replaced with message-passing channels (`tokio::sync::mpsc`), eliminating data races before your code even compiles.
+
+## Conclusion
+
+Rust offers web developers a direct bridge into systems engineering without sacrificing the ergonomics and package ecosystem they love in modern JavaScript and Python.
