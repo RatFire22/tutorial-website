@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Search, Moon, ChevronDown, Mountain } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
@@ -133,21 +134,35 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
 
                 <div
                   className="nav-dropdown-menu"
-                  style={{ minWidth: 320 }}
+                  style={{ minWidth: 350 }}
                 >
                   <Link
                     href="/expedition?summit=everest"
                     className="nav-dropdown-item"
                     onClick={closeAllDropdowns}
+                    style={{ display: 'flex', flexDirection: 'row', gap: '0.75rem', alignItems: 'center' }}
                   >
-                    <div className="dropdown-item-title">
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <span>🏔️</span> Mount Everest · AI
-                      </span>
-                      <span style={{ fontSize: '0.65rem', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Autonomous AI &amp; LLM Engineering: 6 Camps, 30 Pitches from RAG to Swarms
+                    <Image
+                      src="/images/summits/everest.jpg"
+                      alt="Mount Everest"
+                      width={48}
+                      height={48}
+                      style={{
+                        borderRadius: '6px',
+                        objectFit: 'cover',
+                        flexShrink: 0,
+                        border: '1px solid rgba(245, 158, 11, 0.4)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div className="dropdown-item-title">
+                        <span>Mount Everest · AI</span>
+                        <span style={{ fontSize: '0.65rem', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Autonomous AI &amp; LLM Engineering: 6 Camps, 30 Pitches
+                      </div>
                     </div>
                   </Link>
 
@@ -155,15 +170,29 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     href="/system-design/hld/expedition"
                     className="nav-dropdown-item"
                     onClick={closeAllDropdowns}
+                    style={{ display: 'flex', flexDirection: 'row', gap: '0.75rem', alignItems: 'center' }}
                   >
-                    <div className="dropdown-item-title">
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <span>🧗</span> K2 · High-Level Design
-                      </span>
-                      <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,611M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      The Savage Mountain: 24 Pitches of Distributed Systems, Caching &amp; Consensus
+                    <Image
+                      src="/images/summits/k2.jpg"
+                      alt="K2 Savage Mountain"
+                      width={48}
+                      height={48}
+                      style={{
+                        borderRadius: '6px',
+                        objectFit: 'cover',
+                        flexShrink: 0,
+                        border: '1px solid rgba(56, 189, 248, 0.4)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div className="dropdown-item-title">
+                        <span>K2 · High-Level Design</span>
+                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,611M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        The Savage Mountain: 24 Pitches of Distributed Systems &amp; Scale
+                      </div>
                     </div>
                   </Link>
 
@@ -171,15 +200,29 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     href="/system-design/lld/expedition"
                     className="nav-dropdown-item"
                     onClick={closeAllDropdowns}
+                    style={{ display: 'flex', flexDirection: 'row', gap: '0.75rem', alignItems: 'center' }}
                   >
-                    <div className="dropdown-item-title">
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <span>⛏️</span> Kangchenjunga · Low-Level Design
-                      </span>
-                      <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,586M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      The Five Treasures: 20 Pitches of Clean Architecture, SOLID &amp; Concurrency
+                    <Image
+                      src="/images/summits/kangchenjunga.jpg"
+                      alt="Kangchenjunga"
+                      width={48}
+                      height={48}
+                      style={{
+                        borderRadius: '6px',
+                        objectFit: 'cover',
+                        flexShrink: 0,
+                        border: '1px solid rgba(99, 102, 241, 0.4)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div className="dropdown-item-title">
+                        <span>Kangchenjunga · Low-Level Design</span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,586M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        The Five Treasures: 20 Pitches of Clean Architecture &amp; SOLID
+                      </div>
                     </div>
                   </Link>
                 </div>

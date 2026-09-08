@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import ArticleCard from './ArticleCard';
 import { ArticleMeta } from '@/lib/articles';
 import { Sparkles, Mail, Mountain } from 'lucide-react';
@@ -132,9 +133,9 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 padding: '1.5rem',
-                background: 'radial-gradient(ellipse at 90% 10%, rgba(56, 189, 248, 0.12) 0%, rgba(7, 10, 16, 0.95) 75%), #070A10',
+                background: 'radial-gradient(ellipse at 90% 10%, rgba(245, 158, 11, 0.15) 0%, rgba(7, 10, 16, 0.95) 75%), #070A10',
                 borderRadius: 'var(--radius-lg)',
-                border: '1px solid rgba(56, 189, 248, 0.35)',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
                 boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.4)',
                 textDecoration: 'none',
                 transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -142,6 +143,21 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
               className="card-interactive-hover"
             >
               <div>
+                <div style={{ position: 'relative', width: '100%', height: '140px', borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: '1rem', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                  <Image
+                    src="/images/summits/everest.jpg"
+                    alt="Mount Everest"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(7, 10, 16, 0.85) 100%)' }} />
+                  <div style={{ position: 'absolute', bottom: '8px', left: '10px' }}>
+                    <span style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: '#F59E0B', fontWeight: 700, background: 'rgba(7, 10, 16, 0.85)', backdropFilter: 'blur(4px)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
+                      8,848M ELEVATION
+                    </span>
+                  </div>
+                </div>
+
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                   <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', color: '#F59E0B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(245, 158, 11, 0.12)', padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
                     SUMMIT #1 · 8,848M
@@ -181,6 +197,21 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
               className="card-interactive-hover"
             >
               <div>
+                <div style={{ position: 'relative', width: '100%', height: '140px', borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: '1rem', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                  <Image
+                    src="/images/summits/k2.jpg"
+                    alt="K2 Savage Mountain"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(7, 10, 16, 0.85) 100%)' }} />
+                  <div style={{ position: 'absolute', bottom: '8px', left: '10px' }}>
+                    <span style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: '#38BDF8', fontWeight: 700, background: 'rgba(7, 10, 16, 0.85)', backdropFilter: 'blur(4px)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                      8,611M ELEVATION
+                    </span>
+                  </div>
+                </div>
+
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                   <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', color: '#38BDF8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(56, 189, 248, 0.12)', padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
                     SUMMIT #2 · 8,611M
@@ -220,6 +251,21 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
               className="card-interactive-hover"
             >
               <div>
+                <div style={{ position: 'relative', width: '100%', height: '140px', borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: '1rem', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                  <Image
+                    src="/images/summits/kangchenjunga.jpg"
+                    alt="Kangchenjunga"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 40%, rgba(7, 10, 16, 0.85) 100%)' }} />
+                  <div style={{ position: 'absolute', bottom: '8px', left: '10px' }}>
+                    <span style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: '#818CF8', fontWeight: 700, background: 'rgba(7, 10, 16, 0.85)', backdropFilter: 'blur(4px)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+                      8,586M ELEVATION
+                    </span>
+                  </div>
+                </div>
+
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                   <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', color: '#a5b4fc', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(99, 102, 241, 0.12)', padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
                     SUMMIT #3 · 8,586M
