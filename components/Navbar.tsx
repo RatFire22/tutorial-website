@@ -128,7 +128,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={() => setIsLearnAIOpen(false)}
                     >
                       <div className="dropdown-item-title">
-                        <span>Stage 02: Camp I &amp; Icefall</span>
+                        <span>Stage 02: Khumbu Icefall &amp; Camp I</span>
                         <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,065M</span>
                       </div>
                       <div className="dropdown-item-desc">
@@ -142,7 +142,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={() => setIsLearnAIOpen(false)}
                     >
                       <div className="dropdown-item-title">
-                        <span>Stage 03: Camp II</span>
+                        <span>Stage 03: Camp II (Western Cwm)</span>
                         <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,400M</span>
                       </div>
                       <div className="dropdown-item-desc">
@@ -178,6 +178,20 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       </div>
                     </Link>
 
+                    <Link
+                      href="/expedition#summit"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span style={{ color: '#d97706', fontWeight: 700 }}>Stage 06: Hillary Step to Summit</span>
+                        <span style={{ fontSize: '0.65rem', color: '#d97706', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Enterprise platforms, multi-tenant swarms &amp; autonomy
+                      </div>
+                    </Link>
+
                     <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
 
                     <Link
@@ -185,12 +199,8 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       className="nav-dropdown-item"
                       onClick={() => setIsLearnAIOpen(false)}
                     >
-                      <div className="dropdown-item-title">
-                        <span style={{ color: '#d97706', fontWeight: 800 }}>Stage 06: Chomolungma Summit</span>
-                        <span style={{ fontSize: '0.65rem', color: '#d97706', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        Full 30-pitch interactive route to enterprise AI autonomy
+                      <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
+                        Full 8,848M Route &amp; 30 Pitches
                       </div>
                     </Link>
                   </div>
