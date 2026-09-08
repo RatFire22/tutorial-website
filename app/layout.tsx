@@ -35,7 +35,7 @@ export default function RootLayout({
   const articles = getAllArticles();
 
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning>
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -43,9 +43,8 @@ export default function RootLayout({
               (function() {
                 try {
                   var saved = localStorage.getItem('site-theme');
-                  if (saved) {
-                    document.documentElement.setAttribute('data-theme', saved);
-                  }
+                  var theme = saved || 'dark';
+                  document.documentElement.setAttribute('data-theme', theme);
                 } catch(e) {}
               })();
             `,

@@ -4,8 +4,8 @@ import { useSyncExternalStore, useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
 
 function getThemeSnapshot(): 'light' | 'dark' {
-  if (typeof window === 'undefined') return 'light';
-  return (localStorage.getItem('site-theme') as 'light' | 'dark') || 'light';
+  if (typeof window === 'undefined') return 'dark';
+  return (localStorage.getItem('site-theme') as 'light' | 'dark') || 'dark';
 }
 
 function subscribe(callback: () => void) {
@@ -14,7 +14,7 @@ function subscribe(callback: () => void) {
 }
 
 export default function ThemeToggle() {
-  const storeTheme = useSyncExternalStore(subscribe, getThemeSnapshot, () => 'light');
+  const storeTheme = useSyncExternalStore(subscribe, getThemeSnapshot, () => 'dark');
   const [localTheme, setLocalTheme] = useState<'light' | 'dark' | null>(null);
 
   const currentTheme = localTheme ?? storeTheme;
