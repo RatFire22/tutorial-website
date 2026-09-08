@@ -1,0 +1,89 @@
+---
+title: "Designing a High-Throughput Notification Service at Scale (HLD)"
+description: "Architecting multi-channel delivery (Push, SMS, Email): Kafka event streaming, priority queues, rate limits per user, idempotency keys, and circuit-breaker telemetry."
+date: "Oct 15, 2026"
+readTime: "19 min read"
+category: "HLD"
+tagClass: "tag-hld"
+tags: ["HLD", "Distributed Systems", "Kafka", "Message Queues", "Scalability"]
+author:
+  name: "Vishwajeet Gupta"
+  role: "Founder, 2AMCoding"
+  avatar: "VG"
+featured: false
+---
+
+# Designing a Distributed Notification Service at Scale (HLD)
+
+A global notification platform must handle hundreds of millions of notifications every day across Apple APNs, Google FCM, SMS aggregators (Twilio), and transactional email providers (SendGrid, AWS SES).
+
+In this High-Level Design guide, we engineer a resilient, multi-channel notification backbone with sub-second delivery guarantees, strict deduplication, and user opt-out preferences.
+
+---
+
+## 1. System Requirements
+
+### Functional Scope
+1. **Multi-Channel Dispatch**: Push notifications (iOS, Android), SMS, Email, and in-app bell feed.
+2. **Prioritization**:
+   - Critical / High Priority: 2FA OTP codes, security breach alerts (immediate delivery $< 1$s).
+   - Marketing / Low Priority: Digest emails, promotional banners (batched background processing).
+3. **Idempotency & Deduplication**: Ensure no user ever receives duplicate SMS or billing alerts.
+4. **User Frequency Capping**: Maximum 3 marketing pushes per user per day; respect quiet hours.
+
+---
+
+## 2. High-Level Architecture Diagram
+
+```
+[Inbound Event Services]
+         |
+         v
+[API Gateway & Auth]
+         |
+         v
+[Notification Service]
+    ├── Idempotency Check (Redis)
+    └── User Preferences Validation
+         |
+         v
+[Apache Kafka Event Bus]
+    ├── Topic: high_priority_notifications (OTP / Security)
+    └── Topic: low_priority_notifications (Marketing / Digest)
+         |
+         v
+[Channel Consumers & Rate Limiters]
+    ├── Push Worker (APNs / FCM)
+    ├── SMS Worker (Twilio / Sinch)
+    └── Email Worker (SES / SendGrid)
+         |
+         v
+[Analytics & DLQ (Dead Letter Queue)]
+```
+
+---
+
+## 3. Idempotency & Deduplication Engine
+
+Network partitions frequently cause upstream services to retry dispatching events. To prevent duplicate charges or spamming users:
+
+1. Upstream callers generate a unique `idempotency_key` (e.g., `notif_otp_usr8821_timestamp`).
+2. When the Notification Service receives a payload, it issues an atomic Redis `SETNX`:
+   ```python
+   # 10-minute deduplication window
+   is_new = redis_client.set(f"idemp:{key}", "PROCESSING", nx=True, ex=600)
+   if not is_new:
+       return {"status": "already_queued_or_sent"}
+   ```
+3. Once successfully processed by Kafka consumers, state updates to `DELIVERED`.
+
+---
+
+## 4. Third-Party Outage Resilience & Circuit Breakers
+
+External providers like Twilio and APNs occasionally suffer outages or rate limits. If workers make synchronous blocked HTTP calls during an outage, worker thread pools exhaust immediately.
+
+### Resilient Circuit Breaker Topology
+- **Netflix Hystrix / Resilience4j pattern**: Monitor error rates over a 30-second rolling window.
+- If 5xx errors from Twilio exceed 15%, trip the circuit breaker to `OPEN`.
+- Route excess SMS events to a fallback secondary vendor (e.g., AWS SNS) or stash events in a Dead Letter Queue (DLQ) for exponential backoff retries.

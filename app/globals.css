@@ -22,7 +22,17 @@
   --primary-light: #eef2ff;
   --primary-glow: rgba(79, 70, 229, 0.12);
   
-  /* Tag Badges - Soft Pastels */
+  /* Tag Badges - HLD, LLD & AI System Design */
+  --tag-hld-bg: #e0f2fe;
+  --tag-hld-text: #0284c7;
+  --tag-lld-bg: #e0e7ff;
+  --tag-lld-text: #4338ca;
+  --tag-ai-bg: rgba(245, 158, 11, 0.15);
+  --tag-ai-text: #b45309;
+  --tag-distrib-bg: #dcfce7;
+  --tag-distrib-text: #15803d;
+  --tag-patterns-bg: #f3e8ff;
+  --tag-patterns-text: #7e22ce;
   --tag-react-bg: #e0f2fe;
   --tag-react-text: #0369a1;
   --tag-ts-bg: #e0e7ff;
@@ -79,6 +89,16 @@
   --primary-light: rgba(99, 102, 241, 0.15);
   --primary-glow: rgba(99, 102, 241, 0.25);
   
+  --tag-hld-bg: rgba(56, 189, 248, 0.18);
+  --tag-hld-text: #38bdf8;
+  --tag-lld-bg: rgba(99, 102, 241, 0.18);
+  --tag-lld-text: #a5b4fc;
+  --tag-ai-bg: rgba(245, 158, 11, 0.18);
+  --tag-ai-text: #fbbf24;
+  --tag-distrib-bg: rgba(34, 197, 94, 0.18);
+  --tag-distrib-text: #86efac;
+  --tag-patterns-bg: rgba(168, 85, 247, 0.18);
+  --tag-patterns-text: #d8b4fe;
   --tag-react-bg: rgba(14, 165, 233, 0.18);
   --tag-react-text: #7dd3fc;
   --tag-ts-bg: rgba(99, 102, 241, 0.18);
@@ -519,6 +539,11 @@ button {
   letter-spacing: 0.01em;
 }
 
+.tag-hld { background: var(--tag-hld-bg); color: var(--tag-hld-text); }
+.tag-lld { background: var(--tag-lld-bg); color: var(--tag-lld-text); }
+.tag-ai { background: var(--tag-ai-bg); color: var(--tag-ai-text); }
+.tag-distrib { background: var(--tag-distrib-bg); color: var(--tag-distrib-text); }
+.tag-patterns { background: var(--tag-patterns-bg); color: var(--tag-patterns-text); }
 .tag-react { background: var(--tag-react-bg); color: var(--tag-react-text); }
 .tag-typescript { background: var(--tag-ts-bg); color: var(--tag-ts-text); }
 .tag-cloud { background: var(--tag-cloud-bg); color: var(--tag-cloud-text); }

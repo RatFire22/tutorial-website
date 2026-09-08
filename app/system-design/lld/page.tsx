@@ -12,9 +12,8 @@ export default function LLDPage() {
   const articles = getAllArticles();
   const lldArticles = articles.filter(
     (a) =>
-      a.tags.some((t) => ['typescript', 'rust', 'concurrency', 'patterns', 'react', 'css'].includes(t.toLowerCase())) ||
-      a.category.toLowerCase().includes('typescript') ||
-      a.category.toLowerCase().includes('css')
+      a.category.toUpperCase() === 'LLD' ||
+      a.tags.some((t) => ['lld', 'oop', 'design patterns', 'concurrency', 'clean code'].includes(t.toLowerCase()))
   );
 
   return (

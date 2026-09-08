@@ -12,11 +12,8 @@ export default function SystemDesignPage() {
   const articles = getAllArticles();
   const systemArticles = articles.filter(
     (a) =>
-      a.category.toLowerCase().includes('system') ||
-      a.category.toLowerCase().includes('typescript') ||
-      a.category.toLowerCase().includes('cloud') ||
-      a.category.toLowerCase().includes('rust') ||
-      a.tags.some((t) => ['systems', 'concurrency', 'edge functions', 'cloud', 'serverless'].includes(t.toLowerCase()))
+      ['HLD', 'LLD'].includes(a.category.toUpperCase()) ||
+      a.tags.some((t) => ['hld', 'lld', 'distributed systems', 'system design', 'scalability', 'concurrency'].includes(t.toLowerCase()))
   );
 
   return (

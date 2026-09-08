@@ -5,13 +5,13 @@ import Footer from '@/components/Footer';
 import { getAllArticles } from '@/lib/articles';
 
 export const metadata: Metadata = {
-  title: '2AMCoding — Late-Night Engineering Guides & Deep Dives',
-  description: 'In-depth tutorials, system architecture breakdowns, and flow-state engineering guides by 2AMCoding. Free on Vercel.',
-  keywords: ['Next.js', 'TypeScript', 'Edge Computing', 'CSS', 'Rust', 'Web Development', 'Tutorials', 'Blog', '2AMCoding'],
+  title: '2AMCoding — System Design (HLD & LLD) & Autonomous AI Engineering',
+  description: 'In-depth High-Level Design (HLD), Low-Level Design (LLD), object-oriented patterns, and autonomous AI engineering guides by Vishwajeet Gupta (2AMCoding).',
+  keywords: ['System Design', 'HLD', 'LLD', 'High-Level Design', 'Low-Level Design', 'Distributed Systems', 'AI Engineering', 'Autonomous Agents', 'LangGraph', 'Design Patterns', '2AMCoding'],
   authors: [{ name: 'Vishwajeet Gupta' }],
   openGraph: {
-    title: '2AMCoding — Modern Developer Tutorials & Deep Dives',
-    description: 'In-depth developer guides and tutorials with modern architecture.',
+    title: '2AMCoding — System Design (HLD & LLD) & Autonomous AI Engineering',
+    description: 'In-depth High-Level Design (HLD), Low-Level Design (LLD), and enterprise AI engineering guides.',
     type: 'website',
   },
 };

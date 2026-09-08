@@ -1,0 +1,180 @@
+---
+title: "Designing a Parking Lot System: Object-Oriented Modeling & Design Patterns"
+description: "A rigorous Low-Level Design (LLD) blueprint: SOLID principles, Factory & Strategy patterns for fee calculation, vehicle polymorphism, and thread-safe spot allocation."
+date: "Oct 24, 2026"
+readTime: "18 min read"
+category: "LLD"
+tagClass: "tag-lld"
+tags: ["LLD", "Design Patterns", "OOP", "Clean Code", "Concurrency"]
+author:
+  name: "Vishwajeet Gupta"
+  role: "Founder, 2AMCoding"
+  avatar: "VG"
+featured: true
+---
+
+# Designing a Parking Lot System: Production Low-Level Design
+
+The Parking Lot problem is a classic Low-Level Design (LLD) and Object-Oriented Design (OOD) interview question. It rigorously tests an engineer's ability to decompose real-world constraints into modular, extensible class hierarchies, apply Gang-of-Four (GoF) design patterns, and handle concurrent thread contention safely.
+
+---
+
+## 1. System Requirements & Clarifications
+
+### Functional Scope
+1. **Multi-Floor & Multi-Spot Support**: Multiple floors, with designated spots for different vehicle types:
+   - Compact spots (Motorcycles, compact cars)
+   - Medium spots (Standard sedans, SUVs)
+   - Large spots (Buses, heavy trucks)
+   - EV spots with charging capabilities
+2. **Dynamic Ticket Generation**: When a vehicle enters, dispense an immutable `ParkingTicket` with arrival timestamp, spot ID, and vehicle license plate.
+3. **Pluggable Fee Calculation**: Fee structure can be hourly, flat-rate, or surge-priced based on peak occupancy.
+4. **Automated Spot Allocation**: Direct incoming vehicles to the nearest available compatible spot.
+
+### Non-Functional Scope
+- **SOLID Compliance**: Single responsibility, open for extension, interface segregation.
+- **Thread Safety**: Concurrent entry and exit gates must never double-allocate the same parking spot.
+
+---
+
+## 2. Core Entities & Class Modeling
+
+We establish high-cohesion domain models:
+
+```
+                  +-------------------+
+                  |    ParkingLot     | (Singleton)
+                  +-------------------+
+                            |
+                     1..*   | contains
+                            v
+                  +-------------------+
+                  |   ParkingFloor    |
+                  +-------------------+
+                            |
+                     1..*   | contains
+                            v
+                  +-------------------+
+                  |   ParkingSpot     |<-------+ (Inherited by)
+                  +-------------------+        |
+                    ^      ^       ^           |
+                    |      |       |           |
+          +---------+  +---+---+  +------+     |
+          |            |       |         |     |
+      CompactSpot   LargeSpot  EVSpot   MotorcycleSpot
+```
+
+---
+
+## 3. Applying Design Patterns
+
+### 1. Strategy Pattern for Dynamic Fee Calculation
+Pricing rules change constantly. Hardcoding fee calculations inside tickets violates the Open/Closed Principle (OCP). We decouple pricing algorithms using the Strategy Pattern:
+
+```typescript
+export interface FeeCalculationStrategy {
+  calculate(ticket: ParkingTicket, exitTime: Date): number;
+}
+
+export class FlatRateStrategy implements FeeCalculationStrategy {
+  constructor(private hourlyRate: number) {}
+
+  calculate(ticket: ParkingTicket, exitTime: Date): number {
+    const durationHours = Math.ceil(
+      (exitTime.getTime() - ticket.issuedAt.getTime()) / (1000 * 60 * 60)
+    );
+    return Math.max(1, durationHours) * this.hourlyRate;
+  }
+}
+
+export class VehicleTierPricingStrategy implements FeeCalculationStrategy {
+  calculate(ticket: ParkingTicket, exitTime: Date): number {
+    const hours = Math.ceil(
+      (exitTime.getTime() - ticket.issuedAt.getTime()) / (1000 * 60 * 60)
+    );
+    const baseRate = ticket.vehicleType === VehicleType.LARGE ? 25 : 10;
+    return hours * baseRate;
+  }
+}
+```
+
+### 2. Factory Pattern for Spot & Vehicle Creation
+Abstract the instantiation of concrete vehicle types and spots away from business logic:
+
+```typescript
+export enum VehicleType {
+  MOTORCYCLE = 'MOTORCYCLE',
+  CAR = 'CAR',
+  TRUCK = 'TRUCK',
+  ELECTRIC = 'ELECTRIC'
+}
+
+export abstract class Vehicle {
+  constructor(
+    public readonly licensePlate: string,
+    public readonly type: VehicleType
+  ) {}
+}
+
+export class Car extends Vehicle {
+  constructor(licensePlate: string) {
+    super(licensePlate, VehicleType.CAR);
+  }
+}
+```
+
+---
+
+## 4. Thread-Safe Spot Allocation & Concurrency Control
+
+When multiple gates admit vehicles simultaneously, race conditions can allocate spot `Floor 2, Spot 44` to two cars at once.
+
+To guarantee atomicity in production LLD:
+
+```typescript
+export class ParkingSpot {
+  private isOccupied: boolean = false;
+  private currentVehicle: Vehicle | null = null;
+  private readonly lock = new Mutex(); // Reentrant lock / Mutex
+
+  constructor(
+    public readonly spotId: string,
+    public readonly spotType: SpotType,
+    public readonly floorNumber: number
+  ) {}
+
+  public async assignVehicle(vehicle: Vehicle): Promise<boolean> {
+    const release = await this.lock.acquire();
+    try {
+      if (this.isOccupied) {
+        return false;
+      }
+      this.currentVehicle = vehicle;
+      this.isOccupied = true;
+      return true;
+    } finally {
+      release();
+    }
+  }
+
+  public async vacate(): Promise<Vehicle | null> {
+    const release = await this.lock.acquire();
+    try {
+      const v = this.currentVehicle;
+      this.currentVehicle = null;
+      this.isOccupied = false;
+      return v;
+    } finally {
+      release();
+    }
+  }
+}
+```
+
+---
+
+## 5. Architectural Takeaways for Interviews
+
+1. **Keep Models Anemic or Rich?** In LLD, prefer rich domain models where entities own their state transitions (e.g., `spot.assignVehicle()` manages its own state and lock rather than an external manager mutating properties directly).
+2. **Decouple Ticket from Payment:** A `ParkingTicket` records the audit trail of entry. A separate `PaymentService` processes receipts, ensuring high cohesion.
+3. **Graceful Degradation:** Use an in-memory priority queue indexed by distance to return nearest available spots in $O(\log N)$ time.

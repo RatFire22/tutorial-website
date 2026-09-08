@@ -1,0 +1,144 @@
+---
+title: "Building a Concurrency-Safe Task Scheduler & Worker Pool in LLD"
+description: "Production Low-Level Design for a concurrent worker pool: Producer-consumer queues, mutex locks, conditional variables, priority task scheduling, and graceful shutdown handling."
+date: "Oct 20, 2026"
+readTime: "17 min read"
+category: "LLD"
+tagClass: "tag-lld"
+tags: ["LLD", "Concurrency", "Thread Safety", "Design Patterns", "Clean Code"]
+author:
+  name: "Vishwajeet Gupta"
+  role: "Founder, 2AMCoding"
+  avatar: "VG"
+featured: false
+---
+
+# Building a Concurrency-Safe Task Scheduler & Worker Pool (LLD)
+
+Designing an asynchronous task scheduler is one of the most revealing Low-Level Design (LLD) engineering challenges. It requires deep command of multi-threading primitives, avoiding race conditions and deadlocks, implementing fair prioritization, and orchestrating clean process shutdowns.
+
+---
+
+## 1. System Requirements
+
+### Functional Capabilities
+1. **Submit Tasks**: Clients can submit callable task closures with configurable priority (`HIGH`, `MEDIUM`, `LOW`).
+2. **Fixed Worker Pool**: Allocate $N$ reusable background worker threads that pull jobs from a shared concurrent queue.
+3. **Delayed & Periodic Tasks**: Support executing a task at a specified Unix timestamp or recurring interval.
+4. **Graceful Shutdown**: When terminating, drain in-flight jobs, reject new submissions cleanly, and join all worker threads within a configurable timeout.
+
+---
+
+## 2. Core Architectural Components
+
+- **`Task`**: Encapsulates the executable lambda, priority score, task ID, and execution state (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`).
+- **`BlockingPriorityQueue`**: Thread-safe bounded priority heap synchronized via mutual exclusion locks and condition signals.
+- **`Worker`**: A dedicated thread loop that blocks until a task becomes available, runs the task with error boundaries, and reports execution telemetry.
+- **`ThreadPoolManager`**: The orchestration hub coordinating thread initialization, queue limits, and life-cycle events.
+
+---
+
+## 3. The Producer-Consumer Queue Implementation
+
+A production task scheduler relies on condition variables to eliminate CPU-burning spinlocks:
+
+```typescript
+export interface Task {
+  id: string;
+  priority: number; // Lower number = higher urgency
+  execute: () => Promise<void>;
+  deadline?: number;
+}
+
+export class ConcurrentTaskQueue {
+  private queue: Task[] = [];
+  private readonly capacity: number;
+  private isShutdown: boolean = false;
+
+  constructor(capacity: number = 1000) {
+    this.capacity = capacity;
+  }
+
+  public async push(task: Task): Promise<boolean> {
+    if (this.isShutdown) {
+      throw new Error("TaskScheduler has initiated shutdown; submissions rejected.");
+    }
+
+    if (this.queue.length >= this.capacity) {
+      return false; // Queue full: reject or invoke backpressure policy
+    }
+
+    // Insert according to priority (Binary search insertion)
+    const idx = this.findInsertionIndex(task.priority);
+    this.queue.splice(idx, 0, task);
+    return true;
+  }
+
+  public pop(): Task | null {
+    if (this.queue.length === 0) return null;
+    return this.queue.shift() || null;
+  }
+
+  private findInsertionIndex(priority: number): number {
+    let low = 0;
+    let high = this.queue.length;
+    while (low < high) {
+      const mid = (low + high) >>> 1;
+      if (this.queue[mid].priority <= priority) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+    return low;
+  }
+}
+```
+
+---
+
+## 4. Worker Thread Lifecycle & Graceful Shutdown
+
+Handling sudden server interrupts (`SIGTERM`, `SIGINT`) without dropping background jobs:
+
+```typescript
+export class WorkerPool {
+  private workers: Worker[] = [];
+  private isStopping: boolean = false;
+
+  constructor(
+    private readonly poolSize: number,
+    private readonly queue: ConcurrentTaskQueue
+  ) {
+    this.initializeWorkers();
+  }
+
+  private initializeWorkers() {
+    for (let i = 0; i < this.poolSize; i++) {
+      this.spawnWorker(i);
+    }
+  }
+
+  public async shutdown(drainTimeoutMs: number = 10000): Promise<void> {
+    this.isStopping = true;
+    console.log("Shutting down worker pool. Draining pending jobs...");
+
+    const deadline = Date.now() + drainTimeoutMs;
+    while (this.queue.size() > 0 && Date.now() < deadline) {
+      await sleep(100);
+    }
+
+    // Terminate all remaining worker threads
+    await Promise.all(this.workers.map((w) => w.terminate()));
+    console.log("All workers successfully decommissioned.");
+  }
+}
+```
+
+---
+
+## 5. Summary of GoF Patterns Used
+
+- **Command Pattern**: Encapsulates work inside immutable `Task` command objects.
+- **Producer-Consumer Pattern**: Decouples request-submitting client threads from work-executing worker threads.
+- **State Pattern**: Tracks transitions across task states (`PENDING` $\rightarrow$ `RUNNING` $\rightarrow$ `TERMINATED`).

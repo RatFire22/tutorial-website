@@ -11,11 +11,17 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
   const [subscribed, setSubscribed] = useState(false);
   const [email, setEmail] = useState('');
 
-  const categories = ['All', 'Next.js', 'TypeScript', 'Cloud', 'CSS', 'Rust'];
+  const categories = ['All', 'HLD', 'LLD', 'AI & Agents', 'Distributed Systems', 'Design Patterns'];
 
   const filteredArticles = selectedCategory === 'All'
     ? articles
-    : articles.filter((a) => a.category.toLowerCase() === selectedCategory.toLowerCase() || a.tags.some(t => t.toLowerCase() === selectedCategory.toLowerCase()));
+    : articles.filter((a) => {
+        const cat = selectedCategory.toLowerCase();
+        return (
+          a.category.toLowerCase() === cat ||
+          a.tags.some(t => t.toLowerCase() === cat || t.toLowerCase().includes(cat) || cat.includes(t.toLowerCase()))
+        );
+      });
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,15 +37,15 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
         <div className="container">
           <div className="hero-badge-pill">
             <Sparkles size={14} />
-            <span>Modern Developer Tutorials & Architecture</span>
+            <span>High-Level Design • Low-Level Design • AI Engineering</span>
           </div>
 
           <h1 className="hero-title">
-            Crafting clean code &amp; <span className="hero-title-highlight">deep technical guides</span>
+            Mastering System Design &amp; <span className="hero-title-highlight">Autonomous AI Fleets</span>
           </h1>
 
           <p className="hero-subtitle">
-            Exploring modern web development, cloud architectures, and system design. High-signal tutorials written for engineers.
+            Authoritative, zero-fluff blueprints on High-Level Design (HLD), Low-Level Design (LLD), object-oriented patterns, and enterprise AI engineering.
           </p>
 
           {/* Category Filter Pills */}
@@ -105,9 +111,9 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
 
         {/* Newsletter CTA Section */}
         <section className="newsletter-card">
-          <h2 className="newsletter-title">Stay Ahead of Modern Web Architecture</h2>
+          <h2 className="newsletter-title">Stay Ahead of Modern System Design &amp; AI</h2>
           <p className="newsletter-subtitle">
-            Get practical engineering articles, zero-fluff breakdowns, and technical case studies delivered directly to your inbox.
+            Get practical HLD blueprints, LLD patterns, and autonomous agent breakdowns delivered directly to your inbox. Zero fluff.
           </p>
 
           {subscribed ? (

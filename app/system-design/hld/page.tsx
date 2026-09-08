@@ -12,9 +12,8 @@ export default function HLDPage() {
   const articles = getAllArticles();
   const hldArticles = articles.filter(
     (a) =>
-      a.category.toLowerCase().includes('cloud') ||
-      a.category.toLowerCase().includes('typescript') ||
-      a.tags.some((t) => ['edge functions', 'cloud', 'serverless', 'systems', 'vercel', 'devops'].includes(t.toLowerCase()))
+      a.category.toUpperCase() === 'HLD' ||
+      a.tags.some((t) => ['hld', 'distributed systems', 'scalability', 'redis', 'caching', 'kafka'].includes(t.toLowerCase()))
   );
 
   return (

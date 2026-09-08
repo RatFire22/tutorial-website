@@ -1,0 +1,131 @@
+---
+title: "Designing a Distributed Rate Limiter: Algorithms, Redis Clusters & Token Buckets"
+description: "An end-to-end High-Level Design (HLD) deep dive: Token Bucket vs Sliding Window Counter, atomic Redis Lua scripts, and global multi-region consistency."
+date: "Oct 26, 2026"
+readTime: "16 min read"
+category: "HLD"
+tagClass: "tag-hld"
+tags: ["HLD", "Distributed Systems", "Redis", "Rate Limiter", "Scalability"]
+author:
+  name: "Vishwajeet Gupta"
+  role: "Founder, 2AMCoding"
+  avatar: "VG"
+featured: true
+---
+
+# Designing a Distributed Rate Limiter: Architecture at Scale
+
+Rate limiting is the first line of defense in modern distributed systems. Without an industrial-strength rate limiter, malicious scrapers, cascading retry storms, or buggy client loops can degrade database performance, exhaust thread pools, and bring down downstream microservices.
+
+In this deep-dive High-Level Design (HLD), we will architect a high-throughput, low-latency distributed rate limiter capable of handling **millions of requests per second** across multi-region deployments.
+
+---
+
+## 1. Requirements & System Scope
+
+### Functional Requirements
+- **Configurable Rules**: Rate limits must support granularity by User ID, API Key, IP address, or specific API route (e.g., `/api/v1/checkout` vs `/api/v1/search`).
+- **Standard HTTP Responses**: When a limit is breached, respond with HTTP `429 Too Many Requests` along with standard RFC headers:
+  - `X-RateLimit-Limit`: Maximum requests permitted in the window.
+  - `X-RateLimit-Remaining`: Remaining allowance in the current window.
+  - `X-RateLimit-Reset`: Unix timestamp until the bucket replenishes.
+- **Dynamic Policy Updates**: Security and platform teams must be able to update limits in real time without restarting servers.
+
+### Non-Functional Requirements
+- **Ultra-Low Latency**: The rate limiter sits directly on the critical request path. Incurred latency must stay under **2–4 milliseconds** at p99.
+- **High Availability**: If the rate-limiting infrastructure experiences degraded connectivity, the system must fail open rather than block legitimate user traffic.
+- **Scalability**: Handle horizontal scaling to millions of concurrent active keys with predictable memory footprints.
+
+---
+
+## 2. Comparing Rate Limiting Algorithms
+
+Choosing the right mathematical model dictates memory overhead and burst behavior.
+
+| Algorithm | Memory per Key | Burst Handling | Accuracy |
+| :--- | :--- | :--- | :--- |
+| **Token Bucket** | Minimal (~16 bytes) | Allows configured bursts up to bucket capacity | High |
+| **Leaky Bucket** | Minimal | Smooths out bursts to a constant output rate | High |
+| **Fixed Window Counter** | Very Low | Severe spikes at window boundaries (2x limit) | Poor |
+| **Sliding Window Log** | High (stores every timestamp) | Perfect precision | Very High |
+| **Sliding Window Counter**| Low (~2 counters) | Approximates previous & current window | ~99.5% Accurate |
+
+For high-scale API gateways, **Token Bucket** and **Sliding Window Counter** dominate production workloads due to their minimal memory footprint and fair burst handling.
+
+---
+
+## 3. High-Level System Architecture
+
+A production rate-limiting system consists of five core components:
+
+1. **Edge API Gateway (Envoy / Kong / Cloudflare)**: Intercepts inbound traffic, parses metadata headers, and delegates authorization decisions.
+2. **In-Memory Distributed Store (Redis Cluster)**: Houses key-value counters and bucket refill timestamps with sub-millisecond read/write speeds.
+3. **Atomic Evaluation Engine (Lua Scripting)**: Executes token checks and counter decrements in a single atomic cycle to eliminate race conditions.
+4. **Configuration Cache**: Local in-memory caches (e.g., Google Guava or Go sync.Map) holding rule configurations to avoid fetching policies per request.
+5. **Telemetry & Audit Pipeline**: Emits metrics via OpenTelemetry and Kafka to track throttled clients and attack vectors.
+
+---
+
+## 4. Solving Race Conditions with Atomic Redis Lua Scripts
+
+In a distributed environment with hundreds of concurrent API gateways, a naive read-then-write approach causes race conditions:
+
+```
+Thread A: Reads counter = 99 (Limit 100) -> Allowed!
+Thread B: Reads counter = 99 (Limit 100) -> Allowed!
+Both increment counter to 100. Limit was exceeded!
+```
+
+To guarantee atomicity without expensive distributed mutexes, we execute token updates inside an embedded Redis Lua script:
+
+```lua
+-- KEYS[1]: Rate limit key (e.g., ratelimit:usr_9812:checkout)
+-- ARGV[1]: Max tokens (Capacity)
+-- ARGV[2]: Refill rate per second
+-- ARGV[3]: Current timestamp
+-- ARGV[4]: Requested tokens (usually 1)
+
+local key = KEYS[1]
+local capacity = tonumber(ARGV[1])
+local refill_rate = tonumber(ARGV[2])
+local now = tonumber(ARGV[3])
+local requested = tonumber(ARGV[4])
+
+local data = redis.call("HMGET", key, "tokens", "last_updated")
+local tokens = tonumber(data[1])
+local last_updated = tonumber(data[2])
+
+if tokens == nil then
+  tokens = capacity
+  last_updated = now
+else
+  -- Calculate tokens replenished since last request
+  local elapsed = math.max(0, now - last_updated)
+  tokens = math.min(capacity, tokens + (elapsed * refill_rate))
+  last_updated = now
+end
+
+if tokens >= requested then
+  tokens = tokens - requested
+  redis.call("HMSET", key, "tokens", tokens, "last_updated", last_updated)
+  redis.call("EXPIRE", key, math.ceil(capacity / refill_rate) * 2)
+  return {1, math.floor(tokens)} -- Allowed
+else
+  redis.call("HMSET", key, "tokens", tokens, "last_updated", last_updated)
+  return {0, math.floor(tokens)} -- Throttled (HTTP 429)
+end
+```
+
+---
+
+## 5. Multi-Region Synchronization & Fault Tolerance
+
+### Handling Multi-Region Latency
+Routing rate-limiting checks across transatlantic data centers introduces 70–120ms of round-trip latency. To eliminate cross-region lag:
+- **Local Rate Checking with Global Sync**: Each cloud region (us-east, eu-west, ap-south) maintains its own Redis replica cluster.
+- **Token Quota Partitioning**: If a user is allocated 3,000 requests/minute, each of the 3 global regions is provisioned 1,000 requests/minute locally.
+
+### Resilient Fallback (Fail Open vs Fail Closed)
+If the Redis cluster is unreachable:
+- Rate limiters must **fail open** for standard traffic to avoid catastrophic user-facing outages.
+- Specialized sensitive endpoints (e.g., credit card processing or password resets) can be configured with strict **fail closed** rules.

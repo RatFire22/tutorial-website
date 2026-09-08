@@ -1,0 +1,96 @@
+---
+title: "Designing a Global Distributed Cache: Consistent Hashing, Replication & Eviction"
+description: "High-Level Design for massive scale: Consistent hashing with virtual nodes, cache invalidation strategies (Write-Through, Write-Back), stampede protection, and LRU eviction."
+date: "Oct 22, 2026"
+readTime: "20 min read"
+category: "HLD"
+tagClass: "tag-hld"
+tags: ["HLD", "Distributed Systems", "Consistent Hashing", "Caching", "Scalability"]
+author:
+  name: "Vishwajeet Gupta"
+  role: "Founder, 2AMCoding"
+  avatar: "VG"
+featured: true
+---
+
+# Designing a Global Distributed Cache: Consistent Hashing & Architecture
+
+Caches are the operational engine of every high-scale platform. From sub-millisecond session validation to shielding multi-terabyte SQL databases from thunderous request spikes, a properly designed distributed cache is indispensable.
+
+In this High-Level Design guide, we dissect the end-to-end architecture of a distributed in-memory cache like Redis or Memcached.
+
+---
+
+## 1. Core Architectural Pillars
+
+A production-grade distributed cache requires four fundamental mechanisms:
+
+1. **Partitioning & Data Distribution**: How keys are sharded across $N$ physical storage nodes without re-mapping the entire dataset when nodes join or fail.
+2. **Replication & Consensus**: Ensuring high read throughput and zero data loss using primary-replica setups.
+3. **Eviction Policies**: Safely pruning expired or low-utility records when memory ceilings are reached (LRU, LFU, FIFO).
+4. **Cache Invalidation Topologies**: Deciding when and how writes propagate to the persistent backing database.
+
+---
+
+## 2. Partitioning with Consistent Hashing & Virtual Nodes
+
+Traditional modular hashing (`hash(key) % N`) breaks down catastrophically when a single node is added or removed. Almost 100% of keys remap to different servers, triggering a total cache stampede on the primary database.
+
+### The Consistent Hashing Ring
+Consistent hashing maps both servers and data keys onto an abstract 32-bit or 64-bit integer ring ($0$ to $2^{32} - 1$):
+
+```
+                     Node A [Token: 1,000,000]
+                           /          \
+                          /            \
+       Node C [Token: 3,000,000]       Node B [Token: 2,000,000]
+```
+
+- A key is hashed to determine its position on the ring.
+- The key is assigned to the first server whose token is greater than or equal to the key's token (clockwise traversal).
+
+### Virtual Nodes for Non-Uniform Distribution
+If servers have random positions, hash skew causes "hot spots" where one server absorbs 60% of total memory load. 
+
+To achieve uniform distribution, we assign each physical node **100 to 256 virtual nodes** distributed across the ring (e.g., `NodeA-vnode-01`, `NodeA-vnode-02`). This guarantees standard deviation of key allocation stays under $\pm 2\%$.
+
+---
+
+## 3. Cache Write Policies
+
+| Pattern | Write Latency | Consistency | Complexity |
+| :--- | :--- | :--- | :--- |
+| **Cache-Aside (Lazy Loading)** | Low | Eventual; stale data possible if updates miss cache | Low |
+| **Write-Through** | Moderate | High; cache and DB stay in strict lockstep | Moderate |
+| **Write-Back (Write-Behind)** | Lowest | Risk of data loss if cache node crashes before flush | High |
+| **Refresh-Ahead** | Very Low | Predicts access patterns and pre-warms cache | High |
+
+---
+
+## 4. Preventing Cache Collapse Patterns
+
+### 1. Cache Stampede (Thundering Herd)
+When a hot key (e.g., product page for an iPhone launch) expires, thousands of concurrent requests miss the cache simultaneously and slam the SQL database.
+
+**Solution: Mutex Locks with Probabilistic Early Expiration (XFetch)**:
+```python
+# Probabilistic early recomputation (Vattani et al.)
+def should_recompute(key, delta, beta=1.0):
+    val, expiry_time = cache.get(key)
+    # Recompute early before formal expiration based on computation cost
+    if time.now() - (delta * beta * math.log(random.random())) >= expiry_time:
+        return True
+    return False
+```
+
+### 2. Cache Penetration
+Attackers query for non-existent IDs (e.g., `user_id = -999999`), bypassing the cache and querying the primary disk directly.
+
+**Solution: Bloom Filters**:
+Place an in-memory Bloom filter ahead of the cache to determine with 100% certainty if an ID definitely does *not* exist in the system.
+
+### 3. Cache Breakdown & Avalanche
+When entire clusters of keys expire at the same hour, traffic cascades instantly to the database.
+
+**Solution: Jitter**:
+Always append randomized jitter to TTLs: `ttl = BASE_TTL + rand(-300, 300)`.
