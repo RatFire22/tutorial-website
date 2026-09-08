@@ -22,10 +22,11 @@ export default function Footer() {
           <div className="footer-nav-col">
             <h5>Explore</h5>
             <ul className="footer-nav-links">
-              <li><Link href="/">All Tutorials</Link></li>
-              <li><Link href="/tutorials">Latest Guides</Link></li>
-              <li><Link href="/expedition">8,848M AI Expedition</Link></li>
-              <li><Link href="/about">About Author</Link></li>
+              <li><Link href="/system-design">System Design</Link></li>
+              <li><Link href="/expedition">Learn AI (8,848M)</Link></li>
+              <li><Link href="/tutorials">Tutorials</Link></li>
+              <li><Link href="/services">Services</Link></li>
+              <li><Link href="/about">About</Link></li>
             </ul>
           </div>
 

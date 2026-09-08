@@ -29,22 +29,6 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
             <ul className="nav-links">
               <li>
                 <Link
-                  href="/"
-                  className={`nav-link ${pathname === '/' ? 'active' : ''}`}
-                >
-                  Tutorials
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tutorials"
-                  className={`nav-link ${pathname.startsWith('/tutorials') && pathname !== '/' ? 'active' : ''}`}
-                >
-                  Guides
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/system-design"
                   className={`nav-link ${pathname === '/system-design' ? 'active' : ''}`}
                 >
@@ -59,6 +43,22 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                 >
                   <span>Learn AI</span>
                   <span style={{ fontSize: '0.65rem', background: 'rgba(245, 158, 11, 0.15)', color: '#d97706', padding: '1px 6px', borderRadius: '999px', border: '1px solid rgba(245, 158, 11, 0.3)', fontWeight: 700 }}>8,848M</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tutorials"
+                  className={`nav-link ${pathname === '/tutorials' || pathname === '/' ? 'active' : ''}`}
+                >
+                  Tutorials
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className={`nav-link ${pathname === '/services' ? 'active' : ''}`}
+                >
+                  Services
                 </Link>
               </li>
               <li>
