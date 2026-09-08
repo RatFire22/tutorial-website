@@ -70,17 +70,6 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <h2>How This Site is Built</h2>
-        <p>
-          This website is deliberately built with minimal dependencies:
-        </p>
-        <ul>
-          <li><strong>Next.js 16+ App Router (Turbopack)</strong> with Static Site Generation (SSG) for sub-millisecond initial page loads.</li>
-          <li><strong>MDX Content Pipeline</strong>: Markdown files versioned directly in Git, requiring zero runtime database latency.</li>
-          <li><strong>Vanilla CSS Design System</strong>: Bespoke design tokens, zero runtime CSS overhead, smooth dark/light transitions, and responsive grid.</li>
-          <li><strong>Vercel Global Edge Deployment</strong>: Automated CI/CD, worldwide CDN caching, and 100% edge distribution.</li>
-        </ul>
-
         <h2>Connect &amp; Collaborate</h2>
         <p>
           Whether you want to prepare for senior system design rounds, suggest new architectural blueprints, or discuss advisory:
