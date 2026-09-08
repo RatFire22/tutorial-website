@@ -40,6 +40,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
   }, []);
 
   const isSystemDesignActive = pathname.startsWith('/system-design') && !pathname.includes('/expedition');
+  const isLearnAiActive = pathname === '/ai' || pathname.startsWith('/ai');
   const isExpeditionsActive = pathname === '/expedition' || pathname.includes('/expedition');
   const isBlogActive = pathname.startsWith('/blog');
 
@@ -106,11 +107,11 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                 </div>
               </li>
 
-              {/* 2. Learn AI Link (Direct Link) */}
+              {/* 2. Learn AI Link (Direct Link to AI Master Directory) */}
               <li>
                 <Link
-                  href="/expedition?summit=everest"
-                  className="nav-link"
+                  href="/ai"
+                  className={`nav-link ${isLearnAiActive ? 'active' : ''}`}
                   onClick={closeAllDropdowns}
                 >
                   Learn AI

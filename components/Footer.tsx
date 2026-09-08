@@ -23,6 +23,7 @@ export default function Footer() {
             <h5>Explore</h5>
             <ul className="footer-nav-links">
               <li><Link href="/system-design">System Design</Link></li>
+              <li><Link href="/ai">Learn AI</Link></li>
               <li><Link href="/expedition">8,000M Expeditions</Link></li>
               <li><Link href="/blog">Engineering Blog</Link></li>
               <li><Link href="/about">About Vishwajeet</Link></li>
@@ -32,6 +33,7 @@ export default function Footer() {
           <div className="footer-nav-col">
             <h5>Expeditions &amp; Blueprints</h5>
             <ul className="footer-nav-links">
+              <li><Link href="/ai">AI Master Directory (30 Systems)</Link></li>
               <li><Link href="/expedition?summit=everest">Mount Everest · AI (8,848M)</Link></li>
               <li><Link href="/system-design/hld/expedition">K2 · HLD (8,611M)</Link></li>
               <li><Link href="/system-design/lld/expedition">Kangchenjunga · LLD (8,586M)</Link></li>
