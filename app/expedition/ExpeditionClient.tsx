@@ -2,16 +2,9 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { summits, SummitConfig } from '@/lib/summitsData';
 import { Mountain, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
-
-const summitHeroImages: Record<string, string> = {
-  everest: '/images/summits/everest.jpg',
-  k2: '/images/summits/k2.jpg',
-  kangchenjunga: '/images/summits/kangchenjunga.jpg',
-};
 
 function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
   const searchParams = useSearchParams();
@@ -187,83 +180,18 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
 
       {/* Hero Section */}
       <div className="exp-wrap exp-hero">
-        {/* Cinematic Summit Graphic Banner */}
-        <div
-          style={{
-            position: 'relative',
-            borderRadius: 'var(--radius-lg)',
-            overflow: 'hidden',
-            marginBottom: '2rem',
-            border: '1px solid rgba(224, 242, 254, 0.15)',
-            boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.7)',
-          }}
-        >
-          <div style={{ position: 'relative', width: '100%', height: '320px' }}>
-            <Image
-              src={summitHeroImages[activeSummit] || '/images/summits/everest.jpg'}
-              alt={`${currentSummit.name} Summit Graphic`}
-              fill
-              priority
-              style={{ objectFit: 'cover', objectPosition: 'center 40%' }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(180deg, rgba(7, 10, 16, 0.2) 0%, rgba(7, 10, 16, 0.65) 65%, #070A10 100%)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '1.25rem',
-                left: '1.5rem',
-                right: '1.5rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-end',
-                flexWrap: 'wrap',
-                gap: '0.75rem',
-              }}
-            >
-              <div>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    color: currentSummit.badgeColor,
-                    background: 'rgba(7, 10, 16, 0.85)',
-                    backdropFilter: 'blur(8px)',
-                    padding: '3px 10px',
-                    borderRadius: '4px',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    marginBottom: '0.4rem',
-                  }}
-                >
-                  {currentSummit.elevation} ELEVATION · {currentSummit.domain}
-                </span>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#FFFFFF', margin: 0, textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
-                  {currentSummit.name}
-                </h2>
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', background: 'rgba(7, 10, 16, 0.75)', backdropFilter: 'blur(6px)', padding: '4px 10px', borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#CBD5E1' }}>
-                  {currentSummit.stats.verticalRise} Rise
-                </span>
-                <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', background: 'rgba(7, 10, 16, 0.75)', backdropFilter: 'blur(6px)', padding: '4px 10px', borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#CBD5E1' }}>
-                  {currentSummit.stats.waypoints}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="exp-badge-cluster">
+          <div
+            className="expedition-pill"
+            style={{
+              borderColor: `${currentSummit.badgeColor}77`,
+              color: currentSummit.badgeColor,
+            }}
+          >
+            <span>🏔️</span>
+            <span>{currentSummit.name.toUpperCase()} · {currentSummit.elevation}</span>
+          </div>
+          <div className="expedition-pill">{currentSummit.domain.toUpperCase()}</div>
           <div className="expedition-pill">{currentSummit.routeStandard}</div>
           <div className="coord-pill">{currentSummit.coords}</div>
         </div>
