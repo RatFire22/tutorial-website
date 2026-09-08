@@ -350,29 +350,6 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
             </button>
           )}
         </div>
-
-        {/* Topo Ridge Vector */}
-        <div className="topo-strip">
-          <svg className="topo-svg" viewBox="0 0 1000 140" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="topo-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.3" />
-                <stop offset="60%" stopColor="#F59E0B" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#EF4444" stopOpacity="1" />
-              </linearGradient>
-            </defs>
-            <path
-              className="ridge-line"
-              d={
-                activeSummit === 'k2'
-                  ? 'M0,135 L120,118 L280,102 L440,76 L600,56 L760,34 L880,16 L1000,2'
-                  : activeSummit === 'kangchenjunga'
-                  ? 'M0,128 L150,112 L310,90 L480,68 L640,48 L790,32 L910,18 L1000,5'
-                  : 'M0,130 L160,110 L300,95 L460,70 L620,52 L780,30 L900,18 L1000,4'
-              }
-            />
-          </svg>
-        </div>
       </div>
 
       {/* Expedition Trail */}

@@ -204,34 +204,6 @@
   font-weight: 600;
 }
 
-/* Topo Ridge Vector */
-.topo-strip {
-  margin: 60px 0 30px;
-  position: relative;
-}
-
-.topo-svg {
-  width: 100%;
-  height: auto;
-  overflow: visible;
-  display: block;
-}
-
-.ridge-line {
-  fill: none;
-  stroke: url(#topo-gradient);
-  stroke-width: 2.5;
-  stroke-dasharray: 2000;
-  stroke-dashoffset: 2000;
-  animation: drawRidge 3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
-}
-
-@keyframes drawRidge {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
 /* Expedition Trail */
 .expedition-trail {
   position: relative;
