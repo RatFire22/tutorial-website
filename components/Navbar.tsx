@@ -13,13 +13,31 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const navHeaderRef = useRef<HTMLElement | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
 
-  const handleTriggerClick = (dropdownName: string) => {
+  const handleMouseEnter = (dropdownName: string) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpenDropdown(dropdownName);
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      closeAllDropdowns();
+    }, 75);
+  };
+
+  const handleTriggerClick = (dropdownName: string, e?: React.MouseEvent) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (e && e.currentTarget instanceof HTMLElement) {
+      e.currentTarget.blur();
+    }
     setOpenDropdown((prev) => (prev === dropdownName ? null : dropdownName));
   };
 
   const closeAllDropdowns = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setOpenDropdown(null);
     if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
@@ -36,6 +54,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
     document.addEventListener('mousedown', handleDocumentClick);
     return () => {
       document.removeEventListener('mousedown', handleDocumentClick);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
@@ -49,7 +68,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
       <header className="header-nav" ref={navHeaderRef}>
         <div className="container nav-inner">
           {/* Logo */}
-          <Link href="/" className="brand-logo" onClick={closeAllDropdowns}>
+          <Link href="/" className="brand-logo" onClick={closeAllDropdowns} onMouseEnter={closeAllDropdowns}>
             <div className="brand-icon" style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #0284c7 100%)' }}>
               <Moon size={16} color="#facc15" fill="#facc15" />
             </div>
@@ -62,11 +81,13 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               {/* 1. System Design Dropdown */}
               <li
                 className={`nav-dropdown-wrapper ${openDropdown === 'system-design' ? 'open' : ''}`}
+                onMouseEnter={() => handleMouseEnter('system-design')}
+                onMouseLeave={handleMouseLeave}
               >
                 <button
                   type="button"
                   className={`nav-dropdown-trigger ${isSystemDesignActive ? 'active' : ''}`}
-                  onClick={() => handleTriggerClick('system-design')}
+                  onClick={(e) => handleTriggerClick('system-design', e)}
                   aria-expanded={openDropdown === 'system-design'}
                 >
                   <span>System Design</span>
@@ -108,7 +129,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               </li>
 
               {/* 2. Learn AI Link (Direct Link to AI Master Directory) */}
-              <li>
+              <li onMouseEnter={closeAllDropdowns}>
                 <Link
                   href="/ai"
                   className={`nav-link ${isLearnAiActive ? 'active' : ''}`}
@@ -121,11 +142,13 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               {/* 3. Expeditions Dropdown: The 8,000M Summits Trilogy */}
               <li
                 className={`nav-dropdown-wrapper ${openDropdown === 'expeditions' ? 'open' : ''}`}
+                onMouseEnter={() => handleMouseEnter('expeditions')}
+                onMouseLeave={handleMouseLeave}
               >
                 <button
                   type="button"
                   className={`nav-dropdown-trigger ${isExpeditionsActive ? 'active' : ''}`}
-                  onClick={() => handleTriggerClick('expeditions')}
+                  onClick={(e) => handleTriggerClick('expeditions', e)}
                   aria-expanded={openDropdown === 'expeditions'}
                 >
                   <Mountain size={14} style={{ opacity: 0.85 }} />
@@ -192,7 +215,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                         <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,611M</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        The Savage Mountain: 24 Pitches of Distributed Systems &amp; Scale
+                        The Savage Summit: 24 Pitches of Distributed Scale &amp; Raft
                       </div>
                     </div>
                   </Link>
@@ -230,7 +253,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               </li>
 
               {/* 4. Blog Link */}
-              <li>
+              <li onMouseEnter={closeAllDropdowns}>
                 <Link
                   href="/blog"
                   className={`nav-link ${isBlogActive ? 'active' : ''}`}
@@ -243,7 +266,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
           </nav>
 
           {/* Actions: Search & Theme */}
-          <div className="nav-actions">
+          <div className="nav-actions" onMouseEnter={closeAllDropdowns}>
             <button
               className="search-trigger-btn"
               onClick={() => setIsSearchOpen(true)}

@@ -285,12 +285,11 @@ button {
 }
 
 .nav-dropdown-trigger svg.chevron {
-  transition: transform 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nav-dropdown-wrapper:hover .nav-dropdown-trigger svg.chevron,
-.nav-dropdown-wrapper.open .nav-dropdown-trigger svg.chevron,
-.nav-dropdown-trigger[aria-expanded="true"] svg.chevron {
+.nav-dropdown-wrapper.open .nav-dropdown-trigger svg.chevron {
   transform: rotate(180deg);
 }
 
@@ -317,21 +316,20 @@ button {
               visibility 0.16s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Invisible generous bridge so mouse never leaves the hover bounding box when moving from trigger to menu */
+/* Invisible bridge positioned strictly under the trigger so mouse doesn't bleed into Learn AI */
 .nav-dropdown-menu::before {
   content: '';
   position: absolute;
-  top: -24px;
-  left: -12px;
-  right: -12px;
-  height: 28px;
+  top: -16px;
+  left: 0;
+  width: 140px;
+  height: 20px;
   background: transparent;
   pointer-events: auto;
 }
 
-/* Rock-solid instant hover-over & focus-within behavior */
+/* Clean hover-over & explicit open behavior */
 .nav-dropdown-wrapper:hover .nav-dropdown-menu,
-.nav-dropdown-wrapper:focus-within .nav-dropdown-menu,
 .nav-dropdown-wrapper.open .nav-dropdown-menu {
   opacity: 1;
   visibility: visible;
