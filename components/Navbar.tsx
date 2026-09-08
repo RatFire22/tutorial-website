@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Moon, ChevronDown, Mountain, Sparkles } from 'lucide-react';
+import { Search, Moon, ChevronDown, Mountain } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import SearchModal from './SearchModal';
 import { ArticleMeta } from '@/lib/articles';
@@ -102,145 +102,18 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       Design patterns, class models, mutex locks &amp; clean code
                     </div>
                   </Link>
-
-                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
-
-                  <Link
-                    href="/system-design"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                      Architecture Hub &amp; Core Pillars
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Foundations of scalability, caching, consensus &amp; reliability
-                    </div>
-                  </Link>
                 </div>
               </li>
 
-              {/* 2. Learn AI Dropdown (Mount Everest 8,848M Curriculum) */}
-              <li
-                className={`nav-dropdown-wrapper ${openDropdown === 'learn-ai' ? 'open' : ''}`}
-              >
-                <button
-                  type="button"
-                  className="nav-dropdown-trigger"
-                  onClick={() => handleTriggerClick('learn-ai')}
-                  aria-expanded={openDropdown === 'learn-ai'}
+              {/* 2. Learn AI Link (Direct Link) */}
+              <li>
+                <Link
+                  href="/expedition?summit=everest"
+                  className="nav-link"
+                  onClick={closeAllDropdowns}
                 >
-                  <Sparkles size={13} style={{ color: '#38bdf8' }} />
-                  <span>Learn AI</span>
-                  <ChevronDown size={14} className="chevron" />
-                </button>
-
-                <div
-                  className="nav-dropdown-menu"
-                  style={{ minWidth: 320 }}
-                >
-                  <Link
-                    href="/expedition?summit=everest"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title">
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <span>🏔️</span> Mount Everest AI Route
-                      </span>
-                      <span style={{ fontSize: '0.65rem', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M · 30 Pitches</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Autonomous AI &amp; LLM Engineering: From RAG to Multi-Agent Swarms
-                    </div>
-                  </Link>
-
-                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
-
-                  <Link
-                    href="/expedition?summit=everest#foundations"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title">
-                      <span>Stage 01: Base Camp</span>
-                      <span style={{ fontSize: '0.65rem', color: '#64748b', background: 'var(--bg-surface)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>5,364M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Message schemas, token streaming &amp; structured outputs
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/expedition?summit=everest#rag"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title">
-                      <span>Stage 02: Khumbu Icefall</span>
-                      <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,065M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Tool-calling loops, pgvector &amp; hybrid RAG reranking
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/expedition?summit=everest#agents"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title">
-                      <span>Stage 03: Camp II (Western Cwm)</span>
-                      <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,400M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      LangGraph cyclic state machines, checkpoints &amp; memory
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/expedition?summit=everest#mcp"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title">
-                      <span>Stage 04: Camp III (Lhotse Face)</span>
-                      <span style={{ fontSize: '0.65rem', color: '#7c3aed', background: 'rgba(124, 58, 237, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>7,200M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Model Context Protocol (MCP) &amp; multi-agent swarms
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/expedition?summit=everest#reliability"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title">
-                      <span>Stage 05: South Col (Death Zone)</span>
-                      <span style={{ fontSize: '0.65rem', color: '#ef4444', background: 'rgba(239, 68, 68, 0.12)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>7,906M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Hardened evals, OpenTelemetry tracing &amp; sandboxes
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/expedition?summit=everest#summit"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title">
-                      <span>Stage 06: Summit Pinnacle</span>
-                      <span style={{ fontSize: '0.65rem', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Enterprise platforms, multi-tenant swarms &amp; autonomy
-                    </div>
-                  </Link>
-                </div>
+                  Learn AI
+                </Link>
               </li>
 
               {/* 3. Expeditions Dropdown: The 8,000M Summits Trilogy */}
@@ -307,21 +180,6 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     </div>
                     <div className="dropdown-item-desc">
                       The Five Treasures: 20 Pitches of Clean Architecture, SOLID &amp; Concurrency
-                    </div>
-                  </Link>
-
-                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
-
-                  <Link
-                    href="/expedition"
-                    className="nav-dropdown-item"
-                    onClick={closeAllDropdowns}
-                  >
-                    <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                      The 8,000M Trilogy Overview &amp; Ascent Log
-                    </div>
-                    <div className="dropdown-item-desc">
-                      Track elevation progress across all 3 summits and 74 technical pitches
                     </div>
                   </Link>
                 </div>
