@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Moon, ChevronDown } from 'lucide-react';
+import { Search, Moon, ChevronDown, Mountain } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import SearchModal from './SearchModal';
 import { ArticleMeta } from '@/lib/articles';
@@ -67,6 +67,9 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
     };
   }, []);
 
+  const isSystemDesignActive = pathname.startsWith('/system-design') && !pathname.includes('/expedition');
+  const isExpeditionsActive = pathname === '/expedition' || pathname.includes('/expedition');
+
   return (
     <>
       <header className="header-nav" ref={navHeaderRef}>
@@ -82,7 +85,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
           {/* Nav Links */}
           <nav>
             <ul className="nav-links">
-              {/* System Design Dropdown with LLD & HLD */}
+              {/* System Design Dropdown with Master Directories */}
               <li
                 className="nav-dropdown-wrapper"
                 onMouseEnter={() => handleMouseEnter('system-design')}
@@ -90,7 +93,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               >
                 <button
                   type="button"
-                  className={`nav-dropdown-trigger ${pathname.startsWith('/system-design') ? 'active' : ''}`}
+                  className={`nav-dropdown-trigger ${isSystemDesignActive ? 'active' : ''}`}
                   onClick={() => handleTriggerClick('system-design')}
                   aria-expanded={activeDropdown === 'system-design'}
                 >
@@ -101,39 +104,10 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                 {activeDropdown === 'system-design' && (
                   <div
                     className="nav-dropdown-menu"
+                    style={{ minWidth: 300 }}
                     onMouseEnter={() => handleMouseEnter('system-design')}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <Link
-                      href="/system-design/hld/expedition"
-                      className="nav-dropdown-item"
-                      onClick={closeAllDropdowns}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>HLD · K2 Expedition</span>
-                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,611M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        The Savage Mountain: 24 pitches of distributed systems &amp; scale
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/system-design/lld/expedition"
-                      className="nav-dropdown-item"
-                      onClick={closeAllDropdowns}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>LLD · Kangchenjunga</span>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,586M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        The Five Treasures: 20 pitches of OOP, SOLID &amp; concurrency
-                      </div>
-                    </Link>
-
-                    <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
-
                     <Link
                       href="/system-design/hld"
                       className="nav-dropdown-item"
@@ -141,10 +115,10 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     >
                       <div className="dropdown-item-title">
                         <span>HLD Master Directory</span>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', background: 'var(--bg-surface)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>32 Systems</span>
+                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>32 Systems</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        Interactive problem blueprints, architecture specs &amp; scale targets
+                        Interactive blueprints, architectural specs &amp; scale targets
                       </div>
                     </Link>
 
@@ -155,7 +129,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     >
                       <div className="dropdown-item-title">
                         <span>LLD Master Directory</span>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', background: 'var(--bg-surface)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>12 Problems</span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>12 Problems</span>
                       </div>
                       <div className="dropdown-item-desc">
                         Design patterns, class models, mutex locks &amp; clean code
@@ -170,117 +144,85 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                        Overview &amp; Core Pillars
+                        Architecture Hub &amp; Core Pillars
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Foundations of scalability, caching, consensus &amp; reliability
                       </div>
                     </Link>
                   </div>
                 )}
               </li>
 
-              {/* Learn AI Dropdown */}
+              {/* Expeditions Dropdown: The 8,000M Summits Trilogy */}
               <li
                 className="nav-dropdown-wrapper"
-                onMouseEnter={() => handleMouseEnter('learn-ai')}
+                onMouseEnter={() => handleMouseEnter('expeditions')}
                 onMouseLeave={handleMouseLeave}
               >
                 <button
                   type="button"
-                  className={`nav-dropdown-trigger ${pathname === '/expedition' ? 'active' : ''}`}
-                  onClick={() => handleTriggerClick('learn-ai')}
-                  aria-expanded={activeDropdown === 'learn-ai'}
+                  className={`nav-dropdown-trigger ${isExpeditionsActive ? 'active' : ''}`}
+                  onClick={() => handleTriggerClick('expeditions')}
+                  aria-expanded={activeDropdown === 'expeditions'}
                 >
-                  <span>Learn AI</span>
+                  <Mountain size={14} style={{ opacity: 0.85 }} />
+                  <span>Expeditions</span>
                   <ChevronDown size={14} className="chevron" />
                 </button>
 
-                {activeDropdown === 'learn-ai' && (
+                {activeDropdown === 'expeditions' && (
                   <div
                     className="nav-dropdown-menu"
-                    style={{ minWidth: 290 }}
-                    onMouseEnter={() => handleMouseEnter('learn-ai')}
+                    style={{ minWidth: 320 }}
+                    onMouseEnter={() => handleMouseEnter('expeditions')}
                     onMouseLeave={handleMouseLeave}
                   >
                     <Link
-                      href="/expedition#foundations"
+                      href="/expedition?summit=everest"
                       className="nav-dropdown-item"
                       onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
-                        <span>Stage 01: Base Camp</span>
-                        <span style={{ fontSize: '0.65rem', color: '#64748b', background: 'var(--bg-surface)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>5,364M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        Message schemas, token streaming &amp; structured outputs
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/expedition#rag"
-                      className="nav-dropdown-item"
-                      onClick={closeAllDropdowns}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>Stage 02: Khumbu Icefall &amp; Camp I</span>
-                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,065M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        Tool-calling loops, pgvector &amp; hybrid RAG reranking
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/expedition#agents"
-                      className="nav-dropdown-item"
-                      onClick={closeAllDropdowns}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>Stage 03: Camp II (Western Cwm)</span>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,400M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        LangGraph cyclic state machines, checkpoints &amp; memory
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/expedition#mcp"
-                      className="nav-dropdown-item"
-                      onClick={closeAllDropdowns}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>Stage 04: Camp III (Lhotse Face)</span>
-                        <span style={{ fontSize: '0.65rem', color: '#7c3aed', background: 'rgba(124, 58, 237, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>7,200M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        Model Context Protocol (MCP) &amp; multi-agent swarms
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/expedition#reliability"
-                      className="nav-dropdown-item"
-                      onClick={closeAllDropdowns}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>Stage 05: South Col (Death Zone)</span>
-                        <span style={{ fontSize: '0.65rem', color: '#ef4444', background: 'rgba(239, 68, 68, 0.12)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>7,906M</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        Hardened evals, OpenTelemetry tracing &amp; sandboxes
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/expedition#summit"
-                      className="nav-dropdown-item"
-                      onClick={closeAllDropdowns}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>Stage 06: Hillary Step to Summit</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <span>🏔️</span> Mount Everest · AI
+                        </span>
                         <span style={{ fontSize: '0.65rem', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        Enterprise platforms, multi-tenant swarms &amp; autonomy
+                        Autonomous AI &amp; LLM Engineering: 6 Camps, 30 Pitches from RAG to Swarms
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/system-design/hld/expedition"
+                      className="nav-dropdown-item"
+                      onClick={closeAllDropdowns}
+                    >
+                      <div className="dropdown-item-title">
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <span>🧗</span> K2 · High-Level Design
+                        </span>
+                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,611M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        The Savage Mountain: 24 Pitches of Distributed Systems, Caching &amp; Consensus
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/system-design/lld/expedition"
+                      className="nav-dropdown-item"
+                      onClick={closeAllDropdowns}
+                    >
+                      <div className="dropdown-item-title">
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <span>⛏️</span> Kangchenjunga · Low-Level Design
+                        </span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,586M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        The Five Treasures: 20 Pitches of Clean Architecture, SOLID &amp; Concurrency
                       </div>
                     </Link>
 
@@ -292,7 +234,10 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                        Full 8,848M Route &amp; 30 Pitches
+                        The 8,000M Trilogy Overview &amp; Ascent Log
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Track elevation progress across all 3 summits and 74 technical pitches
                       </div>
                     </Link>
                   </div>

@@ -23,20 +23,21 @@ export default function Footer() {
             <h5>Explore</h5>
             <ul className="footer-nav-links">
               <li><Link href="/system-design">System Design</Link></li>
-              <li><Link href="/expedition">Learn AI (8,848M)</Link></li>
-              <li><Link href="/blog">Blog</Link></li>
-              <li><Link href="/services">Services</Link></li>
-              <li><Link href="/about">About</Link></li>
+              <li><Link href="/expedition">8,000M Expeditions</Link></li>
+              <li><Link href="/blog">Engineering Blog</Link></li>
+              <li><Link href="/services">Services &amp; Advisory</Link></li>
+              <li><Link href="/about">About Vishwajeet</Link></li>
             </ul>
           </div>
 
           <div className="footer-nav-col">
-            <h5>System Design</h5>
+            <h5>Expeditions &amp; Blueprints</h5>
             <ul className="footer-nav-links">
-              <li><Link href="/system-design/hld/expedition">K2 Expedition (8,611M HLD)</Link></li>
-              <li><Link href="/system-design/lld/expedition">Kangchenjunga (8,586M LLD)</Link></li>
-              <li><Link href="/system-design/hld">HLD Problem Directory</Link></li>
-              <li><Link href="/system-design/lld">LLD Problem Directory</Link></li>
+              <li><Link href="/expedition?summit=everest">Mount Everest · AI (8,848M)</Link></li>
+              <li><Link href="/system-design/hld/expedition">K2 · HLD (8,611M)</Link></li>
+              <li><Link href="/system-design/lld/expedition">Kangchenjunga · LLD (8,586M)</Link></li>
+              <li><Link href="/system-design/hld">HLD Directory (32 Systems)</Link></li>
+              <li><Link href="/system-design/lld">LLD Directory (12 Problems)</Link></li>
             </ul>
           </div>
 
