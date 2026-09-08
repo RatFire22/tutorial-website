@@ -345,10 +345,25 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* 3D Golden Crown on top of milestone */
+.crown-ornament {
+  position: absolute;
+  top: -16px;
+  font-size: 15px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  animation: crownHover 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes crownHover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
 /* Next Flag */
 .game-node-flag {
   position: absolute;
-  top: -22px;
+  top: -26px;
   background: #F59E0B;
   color: #070A10;
   font-family: 'JetBrains Mono', monospace;

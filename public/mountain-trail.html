@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mount Everest Expedition — Continuous Trekking Trail & Snowfall | 2AMCoding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070A10;
+      --bg-gradient: radial-gradient(circle at 50% 10%, #0F172A 0%, #070A10 70%);
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --card-border-hover: rgba(56, 189, 248, 0.5);
+      --cyan: #38BDF8;
+      --gold: #F59E0B;
+      --gold-light: #FDE047;
+      --emerald: #22C55E;
+      --emerald-dark: #15803D;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-serif: 'Fraunces', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 10% 40%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 90% 70%, rgba(34, 197, 94, 0.06) 0%, transparent 50%);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Topographic contour line background */
+    .topo-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      opacity: 0.08;
+      background-image: radial-gradient(#38BDF8 1px, transparent 1px);
+      background-size: 32px 32px;
+      z-index: 0;
+    }
+
+    /* Snowfall Canvas Overlay */
+    #snowfall-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* Main Container */
+    .expedition-container {
+      position: relative;
+      z-index: 10;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 30px 24px 120px;
+    }
+
+    /* Sticky Navigation Header */
+    .sticky-hud {
+      position: sticky;
+      top: 16px;
+      z-index: 90;
+      background: rgba(11, 17, 29, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.15);
+      margin-bottom: 40px;
+    }
+
+    .brand-hud {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38BDF8, #22C55E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #070A10;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .brand-title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+
+    .hud-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hud-stat {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-stat strong {
+      color: #38BDF8;
+    }
+
+    .hud-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .hud-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38BDF8;
+      color: #38BDF8;
+    }
+
+    .hud-btn.active {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22C55E;
+      color: #22C55E;
+    }
+
+    /* Summit Hero */
+    .summit-hero {
+      text-align: center;
+      margin-bottom: 60px;
+      padding: 20px 0;
+    }
+
+    .summit-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 6px 18px;
+      border-radius: 9999px;
+      color: #38BDF8;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .summit-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(34px, 5.5vw, 56px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .summit-hero p {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    /* Progress Ascent Bar */
+    .progress-wrap {
+      max-width: 460px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-bar-track {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38BDF8, #F59E0B, #22C55E);
+      border-radius: 9999px;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ==========================================================================
+       CONTINUOUS MOUNTAIN TREKKING TRAIL (Candy Crush / Oz Switchback Path)
+       ========================================================================== */
+
+    .trail-canvas-wrapper {
+      position: relative;
+      width: 100%;
+      margin-top: 40px;
+    }
+
+    /* Background SVG drawing the continuous mountain road */
+    .trail-svg-board {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Waypoint Landmark Banner (Camps) */
+    .camp-waypoint-row {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 48px 0 24px;
+    }
+
+    .camp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      padding: 8px 22px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+    }
+
+    .camp-alt {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #38BDF8;
+    }
+
+    .camp-baro {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      padding-left: 10px;
+    }
+
+    .camp-title {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 10px;
+    }
+
+    .camp-sub {
+      font-size: 14px;
+      color: #F59E0B;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .camp-brief {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 8px auto 0;
+      line-height: 1.5;
+    }
+
+    /* Pitch Switchback Rows */
+    .pitch-trail-row {
+      position: relative;
+      z-index: 5;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    /* Candy Crush Tactile Milestone Tile (With Golden Crown) */
+    .milestone-node {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1E293B 0%, #0B111D 100%);
+      border: 3px solid #F59E0B;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 16px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      z-index: 20;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      user-select: none;
+    }
+
+    .milestone-node:hover {
+      transform: translate(-50%, -50%) scale(1.18);
+      border-color: #FDE047;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.8), 0 0 28px rgba(245, 158, 11, 0.75), inset 0 2px 6px rgba(255, 255, 255, 0.6);
+    }
+
+    /* 3D Golden Crown on top of milestone */
+    .crown-ornament {
+      position: absolute;
+      top: -16px;
+      font-size: 16px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+      animation: crownFloat 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes crownFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .milestone-num {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Climbed State: Radiant Emerald Halos */
+    .milestone-node.climbed {
+      background: linear-gradient(135deg, #15803D 0%, #22C55E 100%);
+      border-color: #22C55E;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 26px rgba(34, 197, 94, 0.75), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    }
+
+    .milestone-node.climbed .crown-ornament {
+      filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.9));
+    }
+
+    /* 3 Stars Badge for Climbed Level */
+    .node-stars {
+      position: absolute;
+      bottom: -10px;
+      display: flex;
+      gap: 1px;
+      font-size: 11px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+      pointer-events: none;
+    }
+
+    /* Next Objective / Active Climber Position */
+    .milestone-node.is-next {
+      border-color: #FDE047;
+      animation: nodePulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes nodePulse {
+      0%, 100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 18px rgba(245, 158, 11, 0.5); }
+      50% { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.8), 0 0 32px rgba(251, 191, 36, 0.9); }
+    }
+
+    .climber-pin {
+      position: absolute;
+      top: -30px;
+      background: #F59E0B;
+      color: #070A10;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      animation: climberBounce 1.8s ease-in-out infinite;
+    }
+
+    @keyframes climberBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* Glassmorphism Dossier Callout Cards */
+    .dossier-card {
+      position: absolute;
+      width: 380px;
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 15;
+    }
+
+    .dossier-card:hover {
+      background: rgba(22, 36, 66, 0.88);
+      border-color: var(--card-border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(56, 189, 248, 0.3);
+    }
+
+    .dossier-card.climbed {
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .pitch-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #38BDF8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .log-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      border-radius: 9999px;
+      padding: 3px 10px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .log-btn:hover {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22C55E;
+      color: #22C55E;
+    }
+
+    .log-btn.climbed {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: #22C55E;
+      color: #22C55E;
+    }
+
+    .dossier-card h3 {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .pitch-tech {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #F59E0B;
+      font-weight: 600;
+      margin: 4px 0 8px;
+    }
+
+    .pitch-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .view-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #38BDF8;
+      text-decoration: none;
+    }
+
+    /* Connecting Bridge Lines */
+    .connector-wire {
+      stroke: rgba(245, 158, 11, 0.7);
+      stroke-width: 2.5;
+      stroke-dasharray: 4 4;
+    }
+
+    /* Summit Finish Shrine */
+    .summit-shrine {
+      text-align: center;
+      padding: 80px 20px 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .shrine-badge {
+      display: inline-block;
+      font-size: 48px;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 24px rgba(251, 191, 36, 0.8));
+      animation: crownFloat 2s ease-in-out infinite;
+    }
+
+    .summit-shrine h2 {
+      font-family: var(--font-serif);
+      font-size: 38px;
+      color: #FFFFFF;
+      margin-bottom: 10px;
+    }
+
+    .summit-shrine p {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 820px) {
+      .dossier-card {
+        width: calc(100% - 90px);
+        left: 80px !important;
+        right: auto !important;
+      }
+      .milestone-node {
+        left: 36px !important;
+      }
+      .sticky-hud {
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Topographic Subtle Contour Background -->
+  <div class="topo-bg"></div>
+
+  <!-- Realtime Alpine Snowfall Canvas Overlay -->
+  <canvas id="snowfall-canvas"></canvas>
+
+  <div class="expedition-container">
+    <!-- Sticky Heads-Up Display -->
+    <header class="sticky-hud">
+      <a href="/" class="brand-hud">
+        <div class="brand-icon">2A</div>
+        <span class="brand-title">2AMCODING · EXPEDITIONS</span>
+      </a>
+
+      <div class="hud-controls">
+        <div class="hud-stat">
+          <span>PROGRESS:</span>
+          <strong id="progress-text">0 / 30 PITCHES (0%)</strong>
+        </div>
+
+        <button type="button" class="hud-btn" id="toggle-snow-btn" onclick="toggleSnowfall()">
+          <span>❄️ SNOWFALL: ON</span>
+        </button>
+
+        <button type="button" class="hud-btn" onclick="resetLog()">
+          <span>↺ RESET LOG</span>
+        </button>
+
+        <a href="/expedition?summit=everest" class="hud-btn" style="text-decoration: none; color: #38BDF8;">
+          <span>← NEXT.JS APP</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Summit Header -->
+    <section class="summit-hero">
+      <div class="summit-badge">Mount Everest Expedition · 8,848M</div>
+      <h1>Continuous Mountain Trekking Trail</h1>
+      <p>A true alpine switchback journey inspired by Candy Crush and the Wizard of Oz yellow brick road. Step across the mountain ridges, log every pitch, and conquer the autonomous AI engineering frontier.</p>
+
+      <div class="progress-wrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Mountain Progression Trail -->
+    <main class="trail-canvas-wrapper" id="trail-wrapper">
+      <!-- Full continuous SVG road will be dynamically injected here -->
+      <svg class="trail-svg-board" id="trail-svg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ozGoldRoad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#B45309" />
+            <stop offset="25%" stop-color="#F59E0B" />
+            <stop offset="60%" stop-color="#FDE047" />
+            <stop offset="100%" stop-color="#D97706" />
+          </linearGradient>
+          <linearGradient id="ozEmeraldRoad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#15803D" />
+            <stop offset="50%" stop-color="#22C55E" />
+            <stop offset="100%" stop-color="#4ADE80" />
+          </linearGradient>
+          <filter id="roadGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#F59E0B" flood-opacity="0.35" />
+          </filter>
+        </defs>
+        <g id="svg-road-layer"></g>
+      </svg>
+
+      <!-- Dynamic Stages and Pitches Container -->
+      <div id="trail-content"></div>
+    </main>
+
+    <!-- Summit Finale -->
+    <section class="summit-shrine">
+      <div class="shrine-badge">🏆</div>
+      <h2>Mount Everest Summit: 8,848M</h2>
+      <p>Congratulations! You have climbed every pitch along the continuous trekking route. You now design autonomous swarms, multi-agent runtimes, and self-healing LLM infrastructure with absolute mastery.</p>
+      <a href="/blog/architecting-multi-agent-workflows-langgraph-ai" class="hud-btn" style="padding: 12px 28px; font-size: 14px; background: #38BDF8; color: #070A10; font-weight: 700; text-decoration: none;">
+        <span>READ MULTI-AGENT ARCHITECTURE BLUEPRINT →</span>
+      </a>
+    </section>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. SUMMIT EXPEDITION ROUTE DATA
+       ========================================================================== */
+    const stages = [
+      {
+        id: "base-camp",
+        waypoint: "BASE CAMP",
+        alt: "5,364M",
+        baro: "530 hPa",
+        sub: "The Foundational Acclimatization",
+        brief: "Establishing state machine architecture, graph vectorization, and deterministic runtimes.",
+        pitches: [
+          { stopNum: "01", t: "Tensor Embedding Ridge", tech: "Vector Databases · Embeddings", d: "High-dimensional embedding representations, cosine distance geometry, and multi-modal quantization pipelines." },
+          { stopNum: "02", t: "State Vector Col", tech: "LangGraph · State Reducers", d: "Immutable state evolution, graph serialization, and idempotent state dispatch for multi-agent loops." },
+          { stopNum: "03", t: "Graph Reducer Traverse", tech: "State Reducers · Deterministic Rollbacks", d: "Concurrent branch reducer resolution, CRDT convergence, and deterministic checkpoint rollbacks." },
+          { stopNum: "04", t: "Idempotency Pillar", tech: "Redis · Event Logs · Deduplication", d: "Distributed idempotency keys, Redis lease locks, and message deduplication at high concurrency." },
+          { stopNum: "05", t: "Checkpoint Moraine", tech: "Postgres Checkpointer · WAL", d: "Long-lived workflow durability, thread resume capabilities, and atomic graph snapshots." },
+          { stopNum: "06", t: "Determinism Icefield", tech: "Sampling Seeds · Schema Validation", d: "Constrained JSON decoding, frozen temperature seeds, and zero-shot structural enforcement." }
+        ]
+      },
+      {
+        id: "camp-1",
+        waypoint: "CAMP I (VALLEY OF SILENCE)",
+        alt: "6,065M",
+        baro: "475 hPa",
+        sub: "Protocol & Tooling Interfaces",
+        brief: "Mastering protocol standardizations, tool gating, and strict sandboxed execution.",
+        pitches: [
+          { stopNum: "07", t: "MCP Protocol Serac", tech: "Model Context Protocol · JSON-RPC", d: "Bidirectional stdio/SSE RPC transports, dynamic tool exposure, and capability negotiation." },
+          { stopNum: "08", t: "Context Compression Col", tech: "Sliding Window · Chunk Pruning", d: "Semantic token budgeting, recursive summary compaction, and active-context pruning." },
+          { stopNum: "09", t: "Dynamic Schema Gully", tech: "Pydantic V2 · JSONSchema", d: "Dynamic schema generation, runtime function signature reflection, and structured tool parsing." },
+          { stopNum: "10", t: "Streaming Token Arete", tech: "Server-Sent Events · HTTP/2", d: "Backpressure-resilient SSE streaming, chunk delta coalescing, and client-side cancellation." },
+          { stopNum: "11", t: "Fallback Chimney", tech: "Circuit Breakers · Model Cascades", d: "Exponential backoff jitter, secondary fallback cascades, and graceful degradation protocols." },
+          { stopNum: "12", t: "Tool Authorization Ledge", tech: "Human-in-the-Loop · RBAC", d: "Interactive approval gates, cryptographic payload signing, and permission escalation." }
+        ]
+      },
+      {
+        id: "camp-2",
+        waypoint: "CAMP II (ADVANCED BASE CAMP)",
+        alt: "6,500M",
+        baro: "440 hPa",
+        sub: "Orchestration & Swarm Topologies",
+        brief: "Scaling multi-agent graphs, hierarchical delegation, and autonomous routing.",
+        pitches: [
+          { stopNum: "13", t: "Hierarchical Supervisor Wall", tech: "Supervisor Agent · Delegation", d: "Centralized supervisor nodes, intent classification, and task delegation across sub-graphs." },
+          { stopNum: "14", t: "Scatter-Gather Traverse", tech: "Parallel Sub-graphs · AsyncIO", d: "Fan-out execution over distributed workers with synchronized join reducers." },
+          { stopNum: "15", t: "Consensus Ridge", tech: "Multi-Model Voting · Debate", d: "Tri-model adversarial verification, majority consensus, and semantic debate resolution." },
+          { stopNum: "16", t: "Context Handoff Col", tech: "Memory State Compression", d: "Inter-agent memory handoff protocols, scope isolation, and zero-leak context passing." },
+          { stopNum: "17", t: "Deadlock Detection Couloir", tech: "Graph Cycle Detection · TTL", d: "Cycle detection algorithms, distributed loop guards, and emergency token ejection." },
+          { stopNum: "18", t: "Sandboxed Python Chamber", tech: "Docker · Firecracker · WASM", d: "MicroVM isolation, resource limits, network gating, and AST security sanitization." }
+        ]
+      },
+      {
+        id: "camp-3",
+        waypoint: "CAMP III (LHOTSE FACE)",
+        alt: "7,200M",
+        baro: "400 hPa",
+        sub: "High-Altitude Memory & Telemetry",
+        brief: "Vector semantic stores, long-term reflection graphs, and OpenTelemetry instrumentation.",
+        pitches: [
+          { stopNum: "19", t: "Episodic Recall Glacier", tech: "Vector Index · Semantic Cache", d: "Semantic similarity caching with sub-millisecond retrieval and time-decayed scoring." },
+          { stopNum: "20", t: "Procedural Memory Tower", tech: "Skill Files · Few-Shot Store", d: "Dynamic skill acquisition, persistent procedural templates, and adaptive system prompts." },
+          { stopNum: "21", t: "Self-Reflection Arete", tech: "Critique Agents · Reflexion", d: "Automated test-driven refinement loops, unit test generation, and self-correcting graphs." },
+          { stopNum: "22", t: "Latency Optimization Chimney", tech: "Speculative Decoding · KV-Cache", d: "Draft model speculative decoding, prefix caching reuse, and TTFT acceleration." },
+          { stopNum: "23", t: "Distributed Tracing Buttress", tech: "OpenTelemetry · Jaeger", d: "Span propagation across distributed agent calls, token accounting, and latency tracing." },
+          { stopNum: "24", t: "Model Gateway Scree", tech: "LiteLLM · Cloudflare AI Gateway", d: "Unified routing, dynamic failover, provider quotas, and semantic anomaly detection." }
+        ]
+      },
+      {
+        id: "camp-4",
+        waypoint: "CAMP IV (THE DEATH ZONE)",
+        alt: "7,920M",
+        baro: "355 hPa",
+        hazard: true,
+        sub: "The Final Ridge to Autonomous Supremacy",
+        brief: "Autonomous production resilience, self-healing swarms, and enterprise-grade deployment.",
+        pitches: [
+          { stopNum: "25", t: "Prompt Injection Bastion", tech: "Dual-LLM Guardrails · Canary Tokens", d: "Adversarial defense, delimiter token validation, and multi-layer input sanitization." },
+          { stopNum: "26", t: "Data Exfiltration Crevasse", tech: "Presidio · DLP · Secret Scrubbers", d: "PII redaction, entropy-based credential scanning, and outbound egress filtering." },
+          { stopNum: "27", t: "Autonomous Drift Glacier", tech: "EvidentlyAI · Langfuse Evals", d: "Continuous output drift detection, automated gold-standard evaluation, and alert telemetry." },
+          { stopNum: "28", t: "Canary Deployment Spire", tech: "Kubernetes · Argo Rollouts", d: "Traffic shadowing, progressive blue-green rollout, and automated latency rollback." },
+          { stopNum: "29", t: "Enterprise Incident Responder", tech: "PagerDuty MCP · Runbook Swarm", d: "Autonomous root cause triage, distributed log correlation, and patch proposal generation." },
+          { stopNum: "30", t: "Autonomous AI Engineering Platform", tech: "Full Technical Stack Consolidated", d: "The complete enterprise ecosystem: multi-agent runtime, dynamic sandboxing, and real-time observability." }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       2. LOCALSTORAGE STATE & TRACKING
+       ========================================================================== */
+    const STORAGE_KEY = '2amcoding_mountain_trail_climbed';
+    let climbedPitches = {};
+
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) climbedPitches = JSON.parse(saved);
+    } catch(e) {}
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(climbedPitches));
+      } catch(e) {}
+      updateProgress();
+    }
+
+    function togglePitch(stopNum) {
+      climbedPitches[stopNum] = !climbedPitches[stopNum];
+      saveState();
+      renderTrail();
+    }
+
+    function resetLog() {
+      climbedPitches = {};
+      saveState();
+      renderTrail();
+    }
+
+    function updateProgress() {
+      const allPitches = stages.flatMap(s => s.pitches);
+      const total = allPitches.length;
+      const count = Object.values(climbedPitches).filter(Boolean).length;
+      const pct = Math.round((count / total) * 100);
+
+      document.getElementById('progress-text').innerText = `${count} / ${total} PITCHES (${pct}%)`;
+      document.getElementById('progress-fill').style.width = `${pct}%`;
+    }
+
+    /* ==========================================================================
+       3. CONTINUOUS MOUNTAIN TRAIL SWITCHBACK GENERATOR
+       ========================================================================== */
+    // True mountain switchback sequence across screen width (% values):
+    // Left (20%) -> Center-Right (50%) -> Far Right (80%) -> Center (50%) -> Far Left (18%) ...
+    const SWITCHBACK_X_PATTERN = [22, 50, 78, 52, 20, 48, 80, 48];
+
+    function renderTrail() {
+      const content = document.getElementById('trail-content');
+      content.innerHTML = '';
+
+      let globalPitchIdx = 0;
+      const allPitches = stages.flatMap(s => s.pitches);
+      
+      // Determine first unclimbed pitch as active player location
+      let nextObjective = null;
+      for (const p of allPitches) {
+        if (!climbedPitches[p.stopNum]) {
+          nextObjective = p.stopNum;
+          break;
+        }
+      }
+
+      stages.forEach((stage) => {
+        // Camp Waypoint Landmark
+        const campEl = document.createElement('div');
+        campEl.className = 'camp-waypoint-row';
+        campEl.innerHTML = `
+          <div class="camp-badge">
+            <span class="camp-alt">${stage.alt}</span>
+            <span class="camp-baro">${stage.baro}</span>
+          </div>
+          <h2 class="camp-title">${stage.waypoint}</h2>
+          <div class="camp-sub">${stage.sub}</div>
+          <p class="camp-brief">${stage.brief}</p>
+        `;
+        content.appendChild(campEl);
+
+        // Render Pitch Rows
+        stage.pitches.forEach((p) => {
+          const isClimbed = Boolean(climbedPitches[p.stopNum]);
+          const isNext = p.stopNum === nextObjective;
+
+          // X position along the mountain switchback
+          const xPct = SWITCHBACK_X_PATTERN[globalPitchIdx % SWITCHBACK_X_PATTERN.length];
+          const isLeft = xPct < 50;
+
+          const rowEl = document.createElement('div');
+          rowEl.className = 'pitch-trail-row';
+          rowEl.id = `row-${p.stopNum}`;
+
+          // Milestone Node Button (Candy Crush / Oz Crown Tile)
+          const nodeEl = document.createElement('div');
+          nodeEl.className = `milestone-node ${isClimbed ? 'climbed' : ''} ${isNext ? 'is-next' : ''}`;
+          nodeEl.style.left = `${xPct}%`;
+          nodeEl.title = `Pitch ${p.stopNum}: ${p.t} (Click to toggle climbed)`;
+          nodeEl.onclick = () => togglePitch(p.stopNum);
+
+          nodeEl.innerHTML = `
+            <div class="crown-ornament">👑</div>
+            ${isNext ? '<div class="climber-pin">🧗 YOU ARE HERE</div>' : ''}
+            <div class="milestone-num">${p.stopNum}</div>
+            ${isClimbed ? '<div class="node-stars"><span style="color:#FBBF24">★</span><span style="color:#FDE047">★</span><span style="color:#FBBF24">★</span></div>' : ''}
+          `;
+
+          // Dossier Callout Card
+          const cardEl = document.createElement('div');
+          cardEl.className = `dossier-card ${isClimbed ? 'climbed' : ''}`;
+          // Position card on the opposite side of the node
+          if (isLeft) {
+            cardEl.style.left = `calc(${xPct}% + 56px)`;
+          } else {
+            cardEl.style.right = `calc(${100 - xPct}% + 56px)`;
+          }
+
+          cardEl.onclick = () => {
+            window.location.href = `/expedition/everest/pitch-${p.stopNum}`;
+          };
+
+          cardEl.innerHTML = `
+            <div class="card-meta">
+              <span class="pitch-badge">PITCH ${p.stopNum}</span>
+              <button type="button" class="log-btn ${isClimbed ? 'climbed' : ''}" onclick="event.stopPropagation(); togglePitch('${p.stopNum}')">
+                ${isClimbed ? '✓ CLIMBED' : '+ LOG PITCH'}
+              </button>
+            </div>
+            <h3>
+              <span>${p.t}</span>
+              <span style="opacity: 0.5; font-size: 14px;">→</span>
+            </h3>
+            <div class="pitch-tech">${p.tech}</div>
+            <p class="pitch-desc">${p.d}</p>
+            <div class="card-footer">
+              <span class="view-link">View Blueprint →</span>
+            </div>
+          `;
+
+          rowEl.appendChild(nodeEl);
+          rowEl.appendChild(cardEl);
+          content.appendChild(rowEl);
+
+          globalPitchIdx++;
+        });
+      });
+
+      // After DOM layout settles, draw the continuous mountain SVG road connecting all nodes
+      requestAnimationFrame(drawContinuousRoad);
+    }
+
+    /* ==========================================================================
+       4. DYNAMIC CONTINUOUS SVG ROAD GENERATOR
+       ========================================================================== */
+    function drawContinuousRoad() {
+      const wrapper = document.getElementById('trail-wrapper');
+      const svg = document.getElementById('trail-svg');
+      const roadLayer = document.getElementById('svg-road-layer');
+      
+      const wrapperRect = wrapper.getBoundingClientRect();
+      svg.setAttribute('viewBox', `0 0 ${wrapperRect.width} ${wrapperRect.height}`);
+      roadLayer.innerHTML = '';
+
+      const nodes = Array.from(document.querySelectorAll('.milestone-node'));
+      if (nodes.length === 0) return;
+
+      const points = nodes.map((node) => {
+        const rect = node.getBoundingClientRect();
+        return {
+          x: (rect.left + rect.width / 2) - wrapperRect.left,
+          y: (rect.top + rect.height / 2) - wrapperRect.top,
+          climbed: node.classList.contains('climbed')
+        };
+      });
+
+      // Build continuous smooth cubic Bézier curve through all milestones
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 0; i < points.length - 1; i++) {
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        const midY = (p1.y + p2.y) / 2;
+
+        // Smooth switchback curve
+        pathD += ` C ${p1.x} ${midY}, ${p2.x} ${midY}, ${p2.x} ${p2.y}`;
+      }
+
+      // 1. Road Bed Foundation (Outer wide rim)
+      const baseRoad = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      baseRoad.setAttribute('d', pathD);
+      baseRoad.setAttribute('fill', 'none');
+      baseRoad.setAttribute('stroke', 'rgba(245, 158, 11, 0.25)');
+      baseRoad.setAttribute('stroke-width', '28');
+      baseRoad.setAttribute('stroke-linecap', 'round');
+      baseRoad.setAttribute('stroke-linejoin', 'round');
+      roadLayer.appendChild(baseRoad);
+
+      // 2. Yellow Brick / Alpine Gold Paved Ribbon
+      const mainRoad = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      mainRoad.setAttribute('d', pathD);
+      mainRoad.setAttribute('fill', 'none');
+      mainRoad.setAttribute('stroke', 'url(#ozGoldRoad)');
+      mainRoad.setAttribute('stroke-width', '18');
+      mainRoad.setAttribute('stroke-linecap', 'round');
+      mainRoad.setAttribute('stroke-linejoin', 'round');
+      roadLayer.appendChild(mainRoad);
+
+      // 3. Stepping Pavers / Cobblestones
+      const pavers = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pavers.setAttribute('d', pathD);
+      pavers.setAttribute('fill', 'none');
+      pavers.setAttribute('stroke', '#FEF08A');
+      pavers.setAttribute('stroke-width', '9');
+      pavers.setAttribute('stroke-dasharray', '8 10');
+      pavers.setAttribute('stroke-linecap', 'round');
+      roadLayer.appendChild(pavers);
+
+      // 4. Glowing Trail Edges
+      const edge = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      edge.setAttribute('d', pathD);
+      edge.setAttribute('fill', 'none');
+      edge.setAttribute('stroke', '#FDE68A');
+      edge.setAttribute('stroke-width', '2');
+      edge.setAttribute('stroke-dasharray', '3 6');
+      edge.setAttribute('opacity', '0.6');
+      roadLayer.appendChild(edge);
+    }
+
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(drawContinuousRoad);
+    });
+
+    /* ==========================================================================
+       5. 60FPS REALTIME ALPINE SNOWFALL ENGINE
+       ========================================================================== */
+    let snowfallActive = true;
+    const canvas = document.getElementById('snowfall-canvas');
+    const ctx = canvas.getContext('2d');
+    let flakes = [];
+    const NUM_FLAKES = 120;
+
+    function resizeSnowCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeSnowCanvas);
+    resizeSnowCanvas();
+
+    function initFlakes() {
+      flakes = [];
+      for (let i = 0; i < NUM_FLAKES; i++) {
+        flakes.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 2.8 + 0.8,
+          density: Math.random() * 1 + 0.5,
+          opacity: Math.random() * 0.7 + 0.25,
+          speedY: Math.random() * 1.8 + 0.8,
+          speedX: Math.random() * 1.2 - 0.6,
+          swayAngle: Math.random() * Math.PI * 2,
+          swaySpeed: Math.random() * 0.02 + 0.01
+        });
+      }
+    }
+    initFlakes();
+
+    function renderSnow() {
+      if (!snowfallActive) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < flakes.length; i++) {
+        const f = flakes[i];
+
+        // Draw soft snowflake
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2, false);
+        ctx.fillStyle = `rgba(240, 248, 255, ${f.opacity})`;
+        ctx.shadowBlur = f.radius > 2 ? 6 : 2;
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+        ctx.fill();
+
+        // Update physics
+        f.swayAngle += f.swaySpeed;
+        f.x += f.speedX + Math.sin(f.swayAngle) * 0.7;
+        f.y += f.speedY;
+
+        // Reset flakes when falling past bottom or side
+        if (f.y > canvas.height) {
+          f.y = -10;
+          f.x = Math.random() * canvas.width;
+        }
+        if (f.x > canvas.width) {
+          f.x = 0;
+        } else if (f.x < 0) {
+          f.x = canvas.width;
+        }
+      }
+
+      requestAnimationFrame(renderSnow);
+    }
+
+    function toggleSnowfall() {
+      snowfallActive = !snowfallActive;
+      const btn = document.getElementById('toggle-snow-btn');
+      if (snowfallActive) {
+        btn.innerHTML = '<span>❄️ SNOWFALL: ON</span>';
+        btn.classList.add('active');
+        renderSnow();
+      } else {
+        btn.innerHTML = '<span>❄️ SNOWFALL: OFF</span>';
+        btn.classList.remove('active');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // Initialize application
+    updateProgress();
+    renderTrail();
+    renderSnow();
+  </script>
+</body>
+</html>

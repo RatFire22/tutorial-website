@@ -6,6 +6,92 @@ import { summits, SummitConfig } from '@/lib/summitsData';
 import { Mountain, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 
+function SnowfallCanvas({ active }: { active: boolean }) {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!active) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    const NUM_FLAKES = 110;
+    const flakes = Array.from({ length: NUM_FLAKES }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 2.6 + 0.8,
+      opacity: Math.random() * 0.7 + 0.25,
+      speedY: Math.random() * 1.6 + 0.7,
+      speedX: Math.random() * 1.0 - 0.5,
+      swayAngle: Math.random() * Math.PI * 2,
+      swaySpeed: Math.random() * 0.02 + 0.01,
+    }));
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < flakes.length; i++) {
+        const f = flakes[i];
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(240, 248, 255, ${f.opacity})`;
+        ctx.shadowBlur = f.radius > 2 ? 5 : 2;
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
+        ctx.fill();
+
+        f.swayAngle += f.swaySpeed;
+        f.x += f.speedX + Math.sin(f.swayAngle) * 0.65;
+        f.y += f.speedY;
+
+        if (f.y > height) {
+          f.y = -10;
+          f.x = Math.random() * width;
+        }
+        if (f.x > width) f.x = 0;
+        else if (f.x < 0) f.x = width;
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [active]);
+
+  if (!active) return null;
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        pointerEvents: 'none',
+        zIndex: 99,
+      }}
+    />
+  );
+}
+
 function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -19,6 +105,9 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
 
   const currentSummit: SummitConfig = summits[activeSummit] || summits.everest;
   const expeditionRoute = currentSummit.stages;
+
+  // Snowfall overlay toggle
+  const [snowfallActive, setSnowfallActive] = useState<boolean>(true);
 
   // LocalStorage ascent tracker
   const [climbedPitches, setClimbedPitches] = useState<Record<string, boolean>>({});
@@ -97,6 +186,9 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
 
   return (
     <div className="expedition-root">
+      {/* Realtime Alpine Snowfall Canvas Overlay */}
+      <SnowfallCanvas active={snowfallActive} />
+
       {/* 8,000M Summits Selector Bar */}
       <div
         style={{
@@ -104,9 +196,10 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
           top: '72px',
           zIndex: 40,
           backdropFilter: 'blur(16px)',
-          background: 'rgba(7, 10, 16, 0.88)',
-          borderBottom: '1px solid rgba(224, 242, 254, 0.12)',
-          padding: '0.75rem 1rem',
+          WebkitBackdropFilter: 'blur(16px)',
+          background: 'rgba(7, 10, 16, 0.85)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          padding: '0.65rem 0',
         }}
       >
         <div className="exp-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -191,62 +284,56 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
       </div>
 
       {/* Hero Section */}
-      <div className="exp-wrap exp-hero">
-        <div className="exp-badge-cluster">
-          <div
-            className="expedition-pill"
-            style={{
-              borderColor: `${currentSummit.badgeColor}77`,
-              color: currentSummit.badgeColor,
-            }}
-          >
-            <span>🏔️</span>
-            <span>{currentSummit.name.toUpperCase()} · {currentSummit.elevation}</span>
+      <section className="exp-hero">
+        <div className="exp-wrap">
+          <div className="badge-wrapper">
+            <span
+              className="badge"
+              style={{
+                borderColor: currentSummit.badgeColor,
+                color: currentSummit.badgeColor,
+              }}
+            >
+              {currentSummit.tagline}
+            </span>
           </div>
-          <div className="expedition-pill">{currentSummit.domain.toUpperCase()}</div>
-          <div className="expedition-pill">{currentSummit.routeStandard}</div>
-          <div className="coord-pill">{currentSummit.coords}</div>
-        </div>
-
-        <h1 style={{ lineHeight: 1.15 }}>
-          {currentSummit.name}: {currentSummit.title}.<br />
-          One <em>summit</em> at {currentSummit.elevation}.
-        </h1>
-
-        <div className="exp-hero-sub-grid">
-          <p className="lede">{currentSummit.lede}</p>
-          <div className="exp-hero-stats">
-            <div className="exp-stat-item">
-              <span>Vertical Rise</span>
-              <strong>{currentSummit.stats.verticalRise}</strong>
-            </div>
-            <div className="exp-stat-item">
-              <span>Waypoints</span>
-              <strong>{currentSummit.stats.waypoints}</strong>
-            </div>
-            <div className="exp-stat-item">
-              <span>Crux Pitch</span>
-              <strong>{currentSummit.stats.cruxPitch}</strong>
+          <h1>{currentSummit.title}</h1>
+          <div className="exp-hero-sub-grid">
+            <p className="lede">{currentSummit.lede}</p>
+            <div className="exp-hero-stats">
+              <div className="exp-stat-item">
+                <span>Vertical Rise</span>
+                <strong>{currentSummit.stats.verticalRise}</strong>
+              </div>
+              <div className="exp-stat-item">
+                <span>Waypoints</span>
+                <strong>{currentSummit.stats.waypoints}</strong>
+              </div>
+              <div className="exp-stat-item">
+                <span>Crux Pitch</span>
+                <strong>{currentSummit.stats.cruxPitch}</strong>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Live Ascent Telemetry Tracker */}
-        <div
-          style={{
-            marginTop: '1.75rem',
-            padding: '1.15rem 1.5rem',
-            background: 'rgba(13, 19, 32, 0.75)',
-            border: '1px solid rgba(56, 189, 248, 0.25)',
-            borderRadius: 'var(--radius-lg)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1rem',
-          }}
-        >
-          <div style={{ flex: '1 1 300px' }}>
+      {/* Climbing Progress HUD Bar */}
+      <div
+        style={{
+          position: 'sticky',
+          top: '122px',
+          zIndex: 35,
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          background: 'rgba(11, 17, 29, 0.85)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          padding: '0.65rem 0',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+        }}
+      >
+        <div className="exp-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '220px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
               <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--exp-paper-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Climbing Log: {climbedCount} of {totalPitches} Pitches Logged
@@ -267,14 +354,15 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
             </div>
           </div>
 
-          {climbedCount > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            {/* Snowfall Toggle */}
             <button
               type="button"
-              onClick={resetAscent}
+              onClick={() => setSnowfallActive(!snowfallActive)}
               style={{
-                background: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.25)',
-                color: '#ef4444',
+                background: snowfallActive ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                border: snowfallActive ? '1px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.1)',
+                color: snowfallActive ? '#38BDF8' : 'var(--exp-paper-muted)',
                 fontSize: '0.725rem',
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -283,12 +371,58 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                 gap: '4px',
                 padding: '4px 10px',
                 borderRadius: '6px',
+                transition: 'all 0.15s ease',
               }}
             >
-              <RotateCcw size={11} />
-              <span>Reset Log</span>
+              <span>{snowfallActive ? '❄️ Snowfall: ON' : '❄️ Snowfall: OFF'}</span>
             </button>
-          )}
+
+            {/* Standalone HTML Trail Map Link */}
+            <Link
+              href="/mountain-trail.html"
+              target="_blank"
+              style={{
+                background: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
+                color: '#FBBF24',
+                fontSize: '0.725rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <span>🗺️ Standalone Trail HTML ↗</span>
+            </Link>
+
+            {climbedCount > 0 && (
+              <button
+                type="button"
+                onClick={resetAscent}
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#ef4444',
+                  fontSize: '0.725rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                }}
+              >
+                <RotateCcw size={11} />
+                <span>Reset Log</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -541,6 +675,7 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                           }}
                           title={`Pitch ${p.stopNum}: ${p.t} (Click to toggle climbed)`}
                         >
+                          <div className="crown-ornament">👑</div>
                           {isNext && <div className="game-node-pulse-ring" />}
 
                           {isClimbed ? (
