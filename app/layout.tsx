@@ -14,6 +14,15 @@ export const metadata: Metadata = {
     description: 'In-depth High-Level Design (HLD), Low-Level Design (LLD), and enterprise AI engineering guides.',
     type: 'website',
   },
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 import ScrollRestorationFix from '@/components/ScrollRestorationFix';

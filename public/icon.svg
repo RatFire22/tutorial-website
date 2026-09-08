@@ -1,0 +1,36 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B4B" />
+      <stop offset="50%" stop-color="#4338CA" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#FACC15" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background circle with smooth gradient -->
+  <circle cx="32" cy="32" r="31" fill="url(#bg)" stroke="#38BDF8" stroke-opacity="0.4" stroke-width="1.5" />
+
+  <!-- Subtle glow halo behind moon -->
+  <circle cx="30" cy="32" r="18" fill="url(#moonGlow)" />
+
+  <!-- 2AM Crescent Moon (Centered & Scaled) -->
+  <g transform="translate(13, 13) scale(1.6)">
+    <path 
+      d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" 
+      fill="#FACC15" 
+      stroke="#FDE047" 
+      stroke-width="0.8" 
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    />
+  </g>
+
+  <!-- Delicate Stars -->
+  <circle cx="44" cy="18" r="1.8" fill="#FDE047" />
+  <circle cx="48" cy="28" r="1.2" fill="#FEF08A" />
+  <circle cx="19" cy="44" r="1.4" fill="#93C5FD" />
+</svg>
