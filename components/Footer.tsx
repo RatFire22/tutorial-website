@@ -24,7 +24,7 @@ export default function Footer() {
             <ul className="footer-nav-links">
               <li><Link href="/system-design">System Design</Link></li>
               <li><Link href="/expedition">Learn AI (8,848M)</Link></li>
-              <li><Link href="/tutorials">Tutorials</Link></li>
+              <li><Link href="/blog">Blog</Link></li>
               <li><Link href="/services">Services</Link></li>
               <li><Link href="/about">About</Link></li>
             </ul>

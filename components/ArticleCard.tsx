@@ -15,7 +15,7 @@ export default function ArticleCard({ article }: { article: ArticleMeta }) {
         </div>
       </div>
 
-      <Link href={`/tutorials/${article.slug}`}>
+      <Link href={`/blog/${article.slug}`}>
         <h3 className="card-title">{article.title}</h3>
       </Link>
 

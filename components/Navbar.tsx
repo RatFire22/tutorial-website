@@ -101,10 +101,10 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               </li>
               <li>
                 <Link
-                  href="/tutorials"
-                  className={`nav-link ${pathname === '/tutorials' || pathname === '/' ? 'active' : ''}`}
+                  href="/blog"
+                  className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}
                 >
-                  Tutorials
+                  Blog
                 </Link>
               </li>
               {/* Services Dropdown */}

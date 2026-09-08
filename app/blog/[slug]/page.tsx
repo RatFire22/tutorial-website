@@ -106,11 +106,11 @@ export default async function ArticlePage({
           <TableOfContents toc={article.toc} />
         </div>
 
-        {/* Related Tutorials Section */}
+        {/* Related Articles Section */}
         {relatedArticles.length > 0 && (
           <section style={{ margin: '3rem 0 6rem 0', borderTop: '1px solid var(--border-subtle)', paddingTop: '3rem' }}>
             <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
-              More Guides to Explore
+              More Articles from the Blog
             </h3>
             <div className="cards-grid">
               {relatedArticles.map((rel) => (

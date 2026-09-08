@@ -70,7 +70,7 @@ export default function SearchModal({ isOpen, onClose, articles }: SearchModalPr
             filtered.map((item) => (
               <Link
                 key={item.slug}
-                href={`/tutorials/${item.slug}`}
+                href={`/blog/${item.slug}`}
                 className="search-result-item"
                 onClick={onClose}
               >
