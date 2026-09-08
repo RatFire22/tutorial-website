@@ -1,6 +1,7 @@
 import { Network, Database, Zap, ShieldAlert, Server } from 'lucide-react';
 import { getAllArticles } from '@/lib/articles';
 import ArticleCard from '@/components/ArticleCard';
+import Link from 'next/link';
 import HLDProblemDirectory from '@/components/HLDProblemDirectory';
 import type { Metadata } from 'next';
 
@@ -28,9 +29,47 @@ export default function HLDPage() {
         <h1 style={{ fontSize: '2.75rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '1rem', color: 'var(--text-primary)' }}>
           High-Level Design (HLD)
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.15rem', maxWidth: '650px', margin: '0 auto', lineHeight: 1.6 }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.15rem', maxWidth: '650px', margin: '0 auto 1.5rem auto', lineHeight: 1.6 }}>
           End-to-end architectural blueprints for massive scalability: CDN caching, event-driven streaming, database partitioning, and high availability.
         </p>
+
+        {/* K2 Summit Expedition Banner */}
+        <Link
+          href="/system-design/hld/expedition"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1.5rem',
+            padding: '1.1rem 1.75rem',
+            maxWidth: '780px',
+            width: '100%',
+            background: 'linear-gradient(135deg, rgba(7, 10, 16, 0.95) 0%, rgba(14, 30, 56, 0.9) 100%)',
+            border: '1px solid rgba(56, 189, 248, 0.4)',
+            borderRadius: 'var(--radius-lg)',
+            textDecoration: 'none',
+            textAlign: 'left',
+            boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.3)',
+            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+          className="card-interactive-hover"
+        >
+          <div>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.725rem', fontFamily: 'var(--font-mono)', color: '#38BDF8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
+              <span>🏔️</span> KARAKORAM EXPEDITION · 8,611M
+            </div>
+            <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#F4EFE6' }}>
+              K2: Twenty-four pitches. The Savage Summit at 8,611M.
+            </div>
+            <div style={{ fontSize: '0.825rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+              The high-altitude technical route to planetary scale: 6 camps, Raft consensus, sharding, and zero-RTO disaster recovery.
+            </div>
+          </div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#0284c7', color: '#ffffff', padding: '0.55rem 1.1rem', borderRadius: '9999px', fontWeight: 700, fontSize: '0.825rem', flexShrink: 0 }}>
+            <span>Climb K2</span>
+            <Server size={14} />
+          </div>
+        </Link>
       </header>
 
       {/* HLD Core Pillars */}

@@ -105,18 +105,34 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     onMouseLeave={handleMouseLeave}
                   >
                     <Link
-                      href="/system-design/lld"
+                      href="/system-design/hld/expedition"
                       className="nav-dropdown-item"
                       onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
-                        <span>LLD</span>
-                        <span style={{ fontSize: '0.7rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Low-Level</span>
+                        <span>HLD · K2 Expedition</span>
+                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,611M</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        OOP, design patterns, concurrency &amp; clean code
+                        The Savage Mountain: 24 pitches of distributed systems &amp; scale
                       </div>
                     </Link>
+
+                    <Link
+                      href="/system-design/lld/expedition"
+                      className="nav-dropdown-item"
+                      onClick={closeAllDropdowns}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>LLD · Kangchenjunga</span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,586M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        The Five Treasures: 20 pitches of OOP, SOLID &amp; concurrency
+                      </div>
+                    </Link>
+
+                    <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
 
                     <Link
                       href="/system-design/hld"
@@ -124,11 +140,25 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
-                        <span>HLD</span>
-                        <span style={{ fontSize: '0.7rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>High-Level</span>
+                        <span>HLD Master Directory</span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', background: 'var(--bg-surface)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>32 Systems</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        Distributed systems, microservices &amp; cloud scale
+                        Interactive problem blueprints, architecture specs &amp; scale targets
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/system-design/lld"
+                      className="nav-dropdown-item"
+                      onClick={closeAllDropdowns}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>LLD Master Directory</span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', background: 'var(--bg-surface)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>12 Problems</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Design patterns, class models, mutex locks &amp; clean code
                       </div>
                     </Link>
 

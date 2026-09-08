@@ -3,11 +3,11 @@ import ExpeditionClient from './ExpeditionClient';
 import './expedition.css';
 
 export const metadata: Metadata = {
-  title: 'Chomolungma: 8,848M — An AI Engineering Expedition | 2AMCoding',
-  description: 'Thirty pitches. One summit at 8,848M. Your technical roadmap from Base Camp to the Everest Summit of Autonomous AI Engineering.',
+  title: 'The 8,000M Summits of Engineering — Everest, K2 & Kangchenjunga | 2AMCoding',
+  description: 'Three legendary Himalayan ascents: Mount Everest (8,848M AI), K2 (8,611M HLD), and Kangchenjunga (8,586M LLD). Your rock-face technical roadmaps.',
   openGraph: {
-    title: 'Chomolungma: 8,848M — An AI Engineering Expedition',
-    description: 'Thirty pitches from Base Camp to the 8,848M Summit of Autonomous AI Engineering.',
+    title: 'The 8,000M Summits of Engineering — Everest, K2 & Kangchenjunga',
+    description: 'Three summits: Mount Everest (8,848M AI), K2 (8,611M HLD), and Kangchenjunga (8,586M LLD).',
   },
 };
 
