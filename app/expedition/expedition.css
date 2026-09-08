@@ -210,34 +210,212 @@
   padding: 40px 0 100px;
 }
 
-/* Fixed Climbing Line (Alpine Switchback Zig-Zag) */
-.fixed-line {
+/* ==========================================================================
+   Game Map Progression Trail (Candy Crush / Wizard of Oz Adventure Path)
+   ========================================================================== */
+
+.trail-corridor {
+  grid-column: 2;
+  position: relative;
+  width: 180px;
+  min-height: 180px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.trail-svg {
   position: absolute;
-  left: 50%;
   top: 0;
-  bottom: 0;
-  width: 48px;
-  transform: translateX(-50%);
-  background-image: url("data:image/svg+xml,%3Csvg width='48' height='96' viewBox='0 0 48 96' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 8 0 L 40 48 L 8 96' stroke='%2338BDF8' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' opacity='0.25'/%3E%3Cpath d='M 8 0 L 40 48 L 8 96' stroke='%2338BDF8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M 12 0 L 44 48 L 12 96' stroke='%23F59E0B' stroke-width='1.2' stroke-dasharray='4 4' opacity='0.65' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='40' cy='48' r='3.5' fill='%23F59E0B' stroke='%23070A10' stroke-width='1.5'/%3E%3Ccircle cx='8' cy='0' r='3.5' fill='%2338BDF8' stroke='%23070A10' stroke-width='1.5'/%3E%3Ccircle cx='8' cy='96' r='3.5' fill='%2338BDF8' stroke='%23070A10' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-repeat: repeat-y;
-  background-position: center top;
-  background-size: 48px 96px;
-  animation: ropeGlowPulse 4s ease-in-out infinite;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
   z-index: 1;
 }
 
-[data-theme='light'] .fixed-line {
-  background-image: url("data:image/svg+xml,%3Csvg width='48' height='96' viewBox='0 0 48 96' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 8 0 L 40 48 L 8 96' stroke='%230284C7' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' opacity='0.2'/%3E%3Cpath d='M 8 0 L 40 48 L 8 96' stroke='%230284C7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M 12 0 L 44 48 L 12 96' stroke='%23D97706' stroke-width='1.2' stroke-dasharray='4 4' opacity='0.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='40' cy='48' r='3.5' fill='%23D97706' stroke='%23FFFFFF' stroke-width='1.5'/%3E%3Ccircle cx='8' cy='0' r='3.5' fill='%230284C7' stroke='%23FFFFFF' stroke-width='1.5'/%3E%3Ccircle cx='8' cy='96' r='3.5' fill='%230284C7' stroke='%23FFFFFF' stroke-width='1.5'/%3E%3C/svg%3E");
-  filter: drop-shadow(0 0 6px rgba(2, 132, 199, 0.25));
+.mobile-trail-path {
+  display: none;
 }
 
-@keyframes ropeGlowPulse {
+/* Candy Crush / Oz Stepping Node */
+.game-node {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  user-select: none;
+  border: 3px solid #F59E0B;
+  background: radial-gradient(circle at 35% 35%, #1E293B 0%, #070A10 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(245, 158, 11, 0.35), inset 0 2px 3px rgba(255, 255, 255, 0.35);
+  padding: 0;
+}
+
+.game-node:hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  border-color: #FBBF24;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 24px rgba(245, 158, 11, 0.7), inset 0 2px 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Climbed State: Radiant Emerald */
+.game-node.climbed {
+  border-color: #22C55E;
+  background: linear-gradient(135deg, #15803D 0%, #22C55E 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 20px rgba(34, 197, 94, 0.65), inset 0 2px 3px rgba(255, 255, 255, 0.5);
+}
+
+.game-node.climbed:hover {
+  border-color: #4ADE80;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.75), 0 0 32px rgba(34, 197, 94, 0.85), inset 0 2px 5px rgba(255, 255, 255, 0.7);
+}
+
+/* Next Objective (Active Player Location) */
+.game-node.is-next {
+  border-color: #FBBF24;
+  animation: gameNodePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes gameNodePulse {
   0%, 100% {
-    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.35));
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(245, 158, 11, 0.4), inset 0 2px 3px rgba(255, 255, 255, 0.35);
   }
   50% {
-    filter: drop-shadow(0 0 14px rgba(56, 189, 248, 0.7));
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.75), 0 0 32px rgba(251, 191, 36, 0.85), inset 0 2px 5px rgba(255, 255, 255, 0.6);
   }
+}
+
+.game-node-pulse-ring {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 50%;
+  border: 2px solid #F59E0B;
+  animation: rippleRing 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes rippleRing {
+  0% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+.game-node-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Completed Stars */
+.game-node-stars {
+  position: absolute;
+  top: -15px;
+  display: flex;
+  gap: 1px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  font-size: 10px;
+  line-height: 1;
+  pointer-events: none;
+  animation: starPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes starPop {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Next Flag */
+.game-node-flag {
+  position: absolute;
+  top: -22px;
+  background: #F59E0B;
+  color: #070A10;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Camp Trailhead Gate */
+.camp-trailhead-gate {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto 30px;
+  position: relative;
+  z-index: 2;
+}
+
+.camp-gate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 18px;
+  border-radius: 9999px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #FBBF24;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+}
+
+/* Light Theme Adaptations */
+[data-theme='light'] .game-node {
+  background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #E2E8F0 100%);
+  border-color: #D97706;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25), inset 0 2px 3px rgba(255, 255, 255, 0.8);
+}
+
+[data-theme='light'] .game-node-num {
+  color: #0F172A;
+}
+
+[data-theme='light'] .game-node.climbed {
+  background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%);
+  border-color: #15803D;
+}
+
+[data-theme='light'] .game-node.climbed .game-node-num {
+  color: #FFFFFF;
+}
+
+[data-theme='light'] .camp-gate-badge {
+  background: rgba(217, 119, 6, 0.1);
+  border-color: rgba(217, 119, 6, 0.35);
+  color: #B45309;
 }
 
 /* Waypoint Milestones (Camps) */
@@ -311,9 +489,9 @@
 
 .pitch {
   display: grid;
-  grid-template-columns: 1fr 60px 1fr;
+  grid-template-columns: 1fr 180px 1fr;
   align-items: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -324,39 +502,8 @@
   transform: translateY(0);
 }
 
-/* Anchor Node */
-.carabiner {
-  grid-column: 2;
-  justify-self: center;
-  align-self: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--exp-carabiner-bg);
-  border: 2px solid var(--exp-paper-muted);
-  box-shadow: 0 0 0 4px var(--exp-bg);
-  position: relative;
-  z-index: 3;
-  transition: all 0.3s ease;
-}
-
-.pitch:hover .carabiner {
-  border-color: var(--exp-cyan);
-  transform: scale(1.3);
-  box-shadow: 0 0 16px var(--exp-cyan), 0 0 0 4px var(--exp-bg);
-}
-
-.pitch.deathzone .carabiner {
-  border-color: var(--exp-hazard);
-}
-
-.pitch.deathzone:hover .carabiner {
-  box-shadow: 0 0 16px var(--exp-hazard), 0 0 0 4px var(--exp-bg);
-}
-
-.pitch.summit-ridge .carabiner {
-  border-color: #0284C7;
-  background: var(--exp-cyan);
+.pitch-spacer {
+  width: 100%;
 }
 
 /* Alpine Cards */
@@ -394,16 +541,6 @@
   border-color: rgba(239, 68, 68, 0.4);
 }
 
-/* Horizontal Connector Lines */
-.pitch-card::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  height: 1px;
-  background: var(--exp-border);
-  z-index: 1;
-}
-
 /* Left-hand items (Port) */
 .pitch.port .pitch-card {
   grid-column: 1;
@@ -411,21 +548,11 @@
   text-align: right;
 }
 
-.pitch.port .pitch-card::after {
-  right: -30px;
-  width: 30px;
-}
-
 /* Right-hand items (Starboard) */
 .pitch.starboard .pitch-card {
   grid-column: 3;
   justify-self: start;
   text-align: left;
-}
-
-.pitch.starboard .pitch-card::after {
-  left: -30px;
-  width: 30px;
 }
 
 /* Card Meta & Typography */
@@ -601,40 +728,51 @@
     padding-left: 0;
   }
   
-  .fixed-line {
-    left: 30px;
-    transform: translateX(-50%);
-    width: 32px;
-    background-size: 32px 64px;
-  }
   .waypoint {
     text-align: left;
-    padding-left: 65px;
+    padding-left: 20px;
   }
   
   .pitch {
-    grid-template-columns: 60px 1fr !important;
+    grid-template-columns: 68px 1fr !important;
     margin-bottom: 24px;
+    gap: 12px;
   }
-  .pitch .carabiner {
+
+  .pitch-spacer {
+    display: none !important;
+  }
+
+  .trail-corridor {
     grid-column: 1 !important;
-    justify-self: center;
+    width: 68px !important;
+    min-height: 120px !important;
   }
-  .pitch.port .pitch-card,
-  .pitch.starboard .pitch-card {
+
+  .desktop-trail-path,
+  .desktop-bridge {
+    display: none !important;
+  }
+
+  .mobile-trail-path {
+    display: block !important;
+  }
+
+  .game-node {
+    left: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .pitch-card {
     grid-column: 2 !important;
-    justify-self: start;
-    text-align: left;
-    max-width: 100%;
+    justify-self: start !important;
+    text-align: left !important;
+    max-width: 100% !important;
   }
+
   .pitch.port .pitch-meta {
-    justify-content: flex-start;
-  }
-  .pitch.port .pitch-card::after,
-  .pitch.starboard .pitch-card::after {
-    left: -30px !important;
-    right: auto !important;
-    width: 30px !important;
+    justify-content: flex-start !important;
   }
   
   .logbook {

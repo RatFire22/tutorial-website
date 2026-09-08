@@ -60,6 +60,18 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
   const climbedCount = Object.values(climbedPitches).filter(Boolean).length;
   const ascentPercent = totalPitches > 0 ? Math.round((climbedCount / totalPitches) * 100) : 0;
 
+  // Find next objective pitch (player position on adventure map)
+  let nextObjectivePitch: string | null = null;
+  for (const stage of expeditionRoute) {
+    for (const p of stage.pitches) {
+      if (!climbedPitches[p.stopNum]) {
+        nextObjectivePitch = p.stopNum;
+        break;
+      }
+    }
+    if (nextObjectivePitch) break;
+  }
+
   // Intersection observer for animation
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -280,9 +292,8 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
         </div>
       </div>
 
-      {/* Expedition Trail */}
+      {/* Expedition Trail (Candy Crush / Wizard of Oz Winding Progression Path) */}
       <div className="expedition-trail">
-        <div className="fixed-line" />
         <div className="exp-wrap">
           {expeditionRoute.map((stage) => {
             return (
@@ -298,14 +309,256 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                   <p className="waypoint-brief">{stage.brief}</p>
                 </div>
 
+                {/* Camp Trailhead Gate */}
+                <div className="camp-trailhead-gate">
+                  <div className="camp-gate-badge">
+                    <span>🚩</span>
+                    <span>{stage.waypoint} TRAILHEAD</span>
+                    <span>↓</span>
+                  </div>
+                </div>
+
                 {/* Pitch Stations */}
                 <div className="pitches">
-                  {stage.pitches.map((p) => {
+                  {stage.pitches.map((p, pIdx) => {
                     const isPort = p.index % 2 !== 0;
                     const sideClass = isPort ? 'port' : 'starboard';
                     const hazardClass = stage.hazard ? 'deathzone' : '';
                     const pinnacleClass = stage.pinnacle ? 'summit-ridge' : '';
                     const isClimbed = Boolean(climbedPitches[p.stopNum]);
+                    const isNext = p.stopNum === nextObjectivePitch;
+
+                    // Coordinates in 0-100 viewBox:
+                    // Left node at x=24, Right node at x=76. Center at 50.
+                    const x_node = isPort ? 24 : 76;
+
+                    // Incoming top x coordinate
+                    let x_start = 50;
+                    if (pIdx > 0) {
+                      const prevIsPort = stage.pitches[pIdx - 1].index % 2 !== 0;
+                      x_start = prevIsPort ? 24 : 76;
+                    }
+
+                    // Outgoing bottom x coordinate
+                    let x_end = 50;
+                    if (pIdx < stage.pitches.length - 1) {
+                      const nextIsPort = stage.pitches[pIdx + 1].index % 2 !== 0;
+                      x_end = nextIsPort ? 24 : 76;
+                    }
+
+                    const trailD = `M ${x_start} 0 C ${x_start} 25, ${x_node} 25, ${x_node} 50 C ${x_node} 75, ${x_end} 75, ${x_end} 100`;
+
+                    const renderCard = () => (
+                      <div
+                        className="pitch-card"
+                        style={{
+                          cursor: 'pointer',
+                          borderColor: isClimbed ? 'rgba(34, 197, 94, 0.45)' : undefined,
+                        }}
+                        onClick={() => router.push(`/expedition/${activeSummit}/pitch-${p.stopNum}`)}
+                      >
+                        <div className="pitch-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <span className="pitch-station">PITCH {p.stopNum}</span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              togglePitch(p.stopNum);
+                            }}
+                            style={{
+                              background: isClimbed ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                              border: isClimbed ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
+                              color: isClimbed ? '#22c55e' : 'var(--exp-paper-muted)',
+                              borderRadius: '9999px',
+                              padding: '2px 8px',
+                              fontSize: '0.675rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              transition: 'all 0.15s ease',
+                            }}
+                          >
+                            <CheckCircle2 size={11} />
+                            <span>{isClimbed ? 'CLIMBED' : 'LOG PITCH'}</span>
+                          </button>
+                        </div>
+                        <h3 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                          <span>{p.t}</span>
+                          <ArrowRight size={14} style={{ opacity: 0.5, flexShrink: 0 }} />
+                        </h3>
+                        <div className="pitch-gear">{p.tech}</div>
+                        <p className="pitch-desc">{p.d}</p>
+                        <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'flex-end' }}>
+                          <span
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              fontSize: '0.75rem',
+                              fontWeight: 600,
+                              color: currentSummit.badgeColor,
+                            }}
+                          >
+                            <span>View Blueprint</span>
+                            <ArrowRight size={12} />
+                          </span>
+                        </div>
+                      </div>
+                    );
+
+                    const renderCorridor = () => (
+                      <div className="trail-corridor">
+                        {/* Winding Yellow Brick Road / Adventure SVG */}
+                        <svg
+                          className="trail-svg"
+                          viewBox="0 0 100 100"
+                          preserveAspectRatio="none"
+                        >
+                          <defs>
+                            <linearGradient id={`goldRoad-${p.stopNum}`} x1="0" y1="0" x2="1" y2="1">
+                              <stop offset="0%" stopColor="#D97706" />
+                              <stop offset="35%" stopColor="#F59E0B" />
+                              <stop offset="70%" stopColor="#FBBF24" />
+                              <stop offset="100%" stopColor="#B45309" />
+                            </linearGradient>
+                            <linearGradient id={`emeraldRoad-${p.stopNum}`} x1="0" y1="0" x2="1" y2="1">
+                              <stop offset="0%" stopColor="#15803D" />
+                              <stop offset="50%" stopColor="#22C55E" />
+                              <stop offset="100%" stopColor="#4ADE80" />
+                            </linearGradient>
+                          </defs>
+
+                          {/* 1. Road Base Bed */}
+                          <path
+                            className="desktop-trail-path"
+                            d={trailD}
+                            fill="none"
+                            stroke={isClimbed ? 'rgba(34, 197, 94, 0.25)' : 'rgba(245, 158, 11, 0.2)'}
+                            strokeWidth="32"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            className="mobile-trail-path"
+                            d="M 50 0 L 50 100"
+                            fill="none"
+                            stroke={isClimbed ? 'rgba(34, 197, 94, 0.25)' : 'rgba(245, 158, 11, 0.2)'}
+                            strokeWidth="32"
+                            strokeLinecap="round"
+                          />
+
+                          {/* 2. Main Paved Road (Yellow-Brick / Emerald Ribbon) */}
+                          <path
+                            className="desktop-trail-path"
+                            d={trailD}
+                            fill="none"
+                            stroke={isClimbed ? `url(#emeraldRoad-${p.stopNum})` : `url(#goldRoad-${p.stopNum})`}
+                            strokeWidth="20"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            className="mobile-trail-path"
+                            d="M 50 0 L 50 100"
+                            fill="none"
+                            stroke={isClimbed ? `url(#emeraldRoad-${p.stopNum})` : `url(#goldRoad-${p.stopNum})`}
+                            strokeWidth="20"
+                            strokeLinecap="round"
+                          />
+
+                          {/* 3. Stepping Stones / Cobblestone Pavers */}
+                          <path
+                            className="desktop-trail-path"
+                            d={trailD}
+                            fill="none"
+                            stroke={isClimbed ? '#DCFCE7' : '#FEF08A'}
+                            strokeWidth="10"
+                            strokeDasharray="6 8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            className="mobile-trail-path"
+                            d="M 50 0 L 50 100"
+                            fill="none"
+                            stroke={isClimbed ? '#DCFCE7' : '#FEF08A'}
+                            strokeWidth="10"
+                            strokeDasharray="6 8"
+                            strokeLinecap="round"
+                          />
+
+                          {/* 4. Glowing Edge Trim */}
+                          <path
+                            className="desktop-trail-path"
+                            d={trailD}
+                            fill="none"
+                            stroke={isClimbed ? '#86EFAC' : '#FDE68A'}
+                            strokeWidth="2"
+                            strokeDasharray="3 5"
+                            opacity="0.6"
+                          />
+
+                          {/* 5. Horizontal Walkway Bridge to Pitch Card */}
+                          {isPort ? (
+                            <line
+                              className="desktop-bridge"
+                              x1="0"
+                              y1="50"
+                              x2="24"
+                              y2="50"
+                              stroke={isClimbed ? '#22C55E' : '#F59E0B'}
+                              strokeWidth="4"
+                              strokeDasharray="3 3"
+                              strokeLinecap="round"
+                            />
+                          ) : (
+                            <line
+                              className="desktop-bridge"
+                              x1="76"
+                              y1="50"
+                              x2="100"
+                              y2="50"
+                              stroke={isClimbed ? '#22C55E' : '#F59E0B'}
+                              strokeWidth="4"
+                              strokeDasharray="3 3"
+                              strokeLinecap="round"
+                            />
+                          )}
+                        </svg>
+
+                        {/* Candy Crush / Oz Milestone Puck Button */}
+                        <button
+                          type="button"
+                          className={`game-node ${isClimbed ? 'climbed' : ''} ${isNext ? 'is-next' : ''}`}
+                          style={{
+                            left: `${x_node}%`,
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            togglePitch(p.stopNum);
+                          }}
+                          title={`Pitch ${p.stopNum}: ${p.t} (Click to toggle climbed)`}
+                        >
+                          {isNext && <div className="game-node-pulse-ring" />}
+
+                          {isClimbed ? (
+                            <div className="game-node-stars">
+                              <span style={{ color: '#FBBF24' }}>★</span>
+                              <span style={{ color: '#FDE047', fontSize: '11px', transform: 'translateY(-2px)' }}>★</span>
+                              <span style={{ color: '#FBBF24' }}>★</span>
+                            </div>
+                          ) : isNext ? (
+                            <div className="game-node-flag">
+                              <span>🧗 NEXT</span>
+                            </div>
+                          ) : null}
+
+                          <span className="game-node-num">{p.stopNum}</span>
+                        </button>
+                      </div>
+                    );
 
                     return (
                       <div
@@ -314,127 +567,15 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                       >
                         {isPort ? (
                           <>
-                            <div
-                              className="pitch-card"
-                              style={{
-                                cursor: 'pointer',
-                                borderColor: isClimbed ? 'rgba(34, 197, 94, 0.45)' : undefined,
-                              }}
-                              onClick={() => router.push(`/expedition/${activeSummit}/pitch-${p.stopNum}`)}
-                            >
-                              <div className="pitch-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <span className="pitch-station">PITCH {p.stopNum}</span>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    togglePitch(p.stopNum);
-                                  }}
-                                  style={{
-                                    background: isClimbed ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                                    border: isClimbed ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
-                                    color: isClimbed ? '#22c55e' : 'var(--exp-paper-muted)',
-                                    borderRadius: '9999px',
-                                    padding: '2px 8px',
-                                    fontSize: '0.675rem',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                    transition: 'all 0.15s ease',
-                                  }}
-                                >
-                                  <CheckCircle2 size={11} />
-                                  <span>{isClimbed ? 'CLIMBED' : 'LOG PITCH'}</span>
-                                </button>
-                              </div>
-                              <h3 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                                <span>{p.t}</span>
-                                <ArrowRight size={14} style={{ opacity: 0.5, flexShrink: 0 }} />
-                              </h3>
-                              <div className="pitch-gear">{p.tech}</div>
-                              <p className="pitch-desc">{p.d}</p>
-                              <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'flex-end' }}>
-                                <span
-                                  style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                    fontSize: '0.75rem',
-                                    fontWeight: 600,
-                                    color: currentSummit.badgeColor,
-                                  }}
-                                >
-                                  <span>View Blueprint</span>
-                                  <ArrowRight size={12} />
-                                </span>
-                              </div>
-                            </div>
-                            <div className="carabiner" style={isClimbed ? { borderColor: '#22c55e' } : undefined} />
-                            <div />
+                            {renderCard()}
+                            {renderCorridor()}
+                            <div className="pitch-spacer" />
                           </>
                         ) : (
                           <>
-                            <div />
-                            <div className="carabiner" style={isClimbed ? { borderColor: '#22c55e' } : undefined} />
-                            <div
-                              className="pitch-card"
-                              style={{
-                                cursor: 'pointer',
-                                borderColor: isClimbed ? 'rgba(34, 197, 94, 0.45)' : undefined,
-                              }}
-                              onClick={() => router.push(`/expedition/${activeSummit}/pitch-${p.stopNum}`)}
-                            >
-                              <div className="pitch-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <span className="pitch-station">PITCH {p.stopNum}</span>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    togglePitch(p.stopNum);
-                                  }}
-                                  style={{
-                                    background: isClimbed ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                                    border: isClimbed ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
-                                    color: isClimbed ? '#22c55e' : 'var(--exp-paper-muted)',
-                                    borderRadius: '9999px',
-                                    padding: '2px 8px',
-                                    fontSize: '0.675rem',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                    transition: 'all 0.15s ease',
-                                  }}
-                                >
-                                  <CheckCircle2 size={11} />
-                                  <span>{isClimbed ? 'CLIMBED' : 'LOG PITCH'}</span>
-                                </button>
-                              </div>
-                              <h3 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                                <span>{p.t}</span>
-                                <ArrowRight size={14} style={{ opacity: 0.5, flexShrink: 0 }} />
-                              </h3>
-                              <div className="pitch-gear">{p.tech}</div>
-                              <p className="pitch-desc">{p.d}</p>
-                              <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'flex-end' }}>
-                                <span
-                                  style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                    fontSize: '0.75rem',
-                                    fontWeight: 600,
-                                    color: currentSummit.badgeColor,
-                                  }}
-                                >
-                                  <span>View Blueprint</span>
-                                  <ArrowRight size={12} />
-                                </span>
-                              </div>
-                            </div>
+                            <div className="pitch-spacer" />
+                            {renderCorridor()}
+                            {renderCard()}
                           </>
                         )}
                       </div>
