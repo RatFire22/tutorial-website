@@ -31,12 +31,12 @@ export default function Footer() {
           </div>
 
           <div className="footer-nav-col">
-            <h5>Topics</h5>
+            <h5>System Design</h5>
             <ul className="footer-nav-links">
-              <li><Link href="/?category=Next.js">Next.js &amp; React</Link></li>
-              <li><Link href="/?category=TypeScript">TypeScript Deep Dives</Link></li>
-              <li><Link href="/?category=Cloud">Cloud &amp; Edge Computing</Link></li>
-              <li><Link href="/?category=CSS">Modern Web Design</Link></li>
+              <li><Link href="/system-design/lld">LLD (Low-Level Design)</Link></li>
+              <li><Link href="/system-design/hld">HLD (High-Level Design)</Link></li>
+              <li><Link href="/system-design">Architecture Blueprints</Link></li>
+              <li><Link href="/expedition">AI System Swarms</Link></li>
             </ul>
           </div>
 

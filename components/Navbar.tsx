@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Moon } from 'lucide-react';
+import { Search, Moon, ChevronDown } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import SearchModal from './SearchModal';
 import { ArticleMeta } from '@/lib/articles';
 
 export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
 
   return (
@@ -27,13 +28,65 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
           {/* Nav Links */}
           <nav>
             <ul className="nav-links">
-              <li>
-                <Link
-                  href="/system-design"
-                  className={`nav-link ${pathname === '/system-design' ? 'active' : ''}`}
+              {/* System Design Dropdown with LLD & HLD */}
+              <li
+                className="nav-dropdown-wrapper"
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
+                <button
+                  type="button"
+                  className={`nav-dropdown-trigger ${pathname.startsWith('/system-design') ? 'active' : ''}`}
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  aria-expanded={isDropdownOpen}
                 >
-                  System Design
-                </Link>
+                  <span>System Design</span>
+                  <ChevronDown size={14} className="chevron" />
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="nav-dropdown-menu">
+                    <Link
+                      href="/system-design/lld"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>LLD</span>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Low-Level</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        OOP, design patterns, concurrency &amp; clean code
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/system-design/hld"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>HLD</span>
+                        <span style={{ fontSize: '0.7rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>High-Level</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Distributed systems, microservices &amp; cloud scale
+                      </div>
+                    </Link>
+
+                    <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
+
+                    <Link
+                      href="/system-design"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
+                        Overview &amp; Core Pillars
+                      </div>
+                    </Link>
+                  </div>
+                )}
               </li>
               <li>
                 <Link
