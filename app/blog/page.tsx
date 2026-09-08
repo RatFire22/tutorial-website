@@ -11,7 +11,7 @@ export default function BlogPage() {
   const articles = getAllArticles();
 
   return (
-    <div className="container" style={{ padding: '3.5rem 1.5rem 6rem 1.5rem' }}>
+    <div className="container" style={{ padding: '5rem 1.5rem 6rem 1.5rem' }}>
       <header style={{ marginBottom: '3rem', textAlign: 'center' }}>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
           Engineering Blog &amp; Deep Dives

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="container-narrow" style={{ padding: '3.5rem 1.5rem 6rem 1.5rem' }}>
+    <div className="container-narrow" style={{ padding: '5rem 1.5rem 6rem 1.5rem' }}>
 
       <header style={{ marginBottom: '2.5rem' }}>
         <div className="author-full-meta" style={{ marginBottom: '1.5rem' }}>

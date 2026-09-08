@@ -20,7 +20,7 @@ export default function SystemDesignPage() {
   );
 
   return (
-    <div className="container" style={{ padding: '3.5rem 1.5rem 6rem 1.5rem' }}>
+    <div className="container" style={{ padding: '5rem 1.5rem 6rem 1.5rem' }}>
 
       <header style={{ marginBottom: '3.5rem', textAlign: 'center' }}>
         <div className="hero-badge-pill" style={{ marginBottom: '1rem' }}>

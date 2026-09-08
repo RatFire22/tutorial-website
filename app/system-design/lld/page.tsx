@@ -18,7 +18,7 @@ export default function LLDPage() {
   );
 
   return (
-    <div className="container" style={{ padding: '3.5rem 1.5rem 6rem 1.5rem' }}>
+    <div className="container" style={{ padding: '5rem 1.5rem 6rem 1.5rem' }}>
       <header style={{ marginBottom: '3.5rem', textAlign: 'center' }}>
         <div className="hero-badge-pill" style={{ marginBottom: '1rem', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)' }}>
           <Layers size={14} />

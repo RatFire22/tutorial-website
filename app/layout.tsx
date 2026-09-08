@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   },
 };
 
+import ScrollRestorationFix from '@/components/ScrollRestorationFix';
+
 export default function RootLayout({
   children,
 }: {
@@ -42,6 +44,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <ScrollRestorationFix />
         <div className="ambient-glow-top" />
         <Navbar articles={articles} />
         <main style={{ flex: 1 }}>{children}</main>
