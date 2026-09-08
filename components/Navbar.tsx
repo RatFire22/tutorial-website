@@ -184,8 +184,8 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={() => setIsLearnAIOpen(false)}
                     >
                       <div className="dropdown-item-title">
-                        <span style={{ color: '#d97706', fontWeight: 700 }}>Stage 06: Hillary Step to Summit</span>
-                        <span style={{ fontSize: '0.65rem', color: '#d97706', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
+                        <span>Stage 06: Hillary Step to Summit</span>
+                        <span style={{ fontSize: '0.65rem', color: '#f59e0b', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
                       </div>
                       <div className="dropdown-item-desc">
                         Enterprise platforms, multi-tenant swarms &amp; autonomy
