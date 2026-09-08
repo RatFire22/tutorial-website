@@ -102,10 +102,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                   onClick={() => setIsLearnAIOpen(!isLearnAIOpen)}
                   aria-expanded={isLearnAIOpen}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span>Learn AI</span>
-                    <span style={{ fontSize: '0.65rem', background: 'rgba(245, 158, 11, 0.15)', color: '#d97706', padding: '1px 6px', borderRadius: '999px', border: '1px solid rgba(245, 158, 11, 0.3)', fontWeight: 700 }}>8,848M</span>
-                  </span>
+                  <span>Learn AI</span>
                   <ChevronDown size={14} className="chevron" />
                 </button>
 
