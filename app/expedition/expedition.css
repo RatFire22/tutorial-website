@@ -1,0 +1,588 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+.expedition-root {
+  --exp-bg: #070A10;
+  --exp-paper: #F4EFE6;
+  --exp-paper-muted: #8E98A8;
+  --exp-ice: #E0F2FE;
+  --exp-cyan: #38BDF8;
+  --exp-amber: #F59E0B;
+  --exp-hazard: #EF4444;
+  --exp-line: rgba(255, 255, 255, 0.08);
+  --exp-border: rgba(224, 242, 254, 0.12);
+  --exp-card-surface: rgba(13, 19, 32, 0.65);
+  --exp-card-surface-hover: rgba(21, 30, 50, 0.85);
+
+  font-family: 'Inter', sans-serif;
+  color: var(--exp-paper);
+  background: radial-gradient(circle at 50% 0%, #152238 0%, var(--exp-bg) 45%);
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Glacial Grid */
+.expedition-root::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.exp-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero Header */
+.exp-hero {
+  padding: 100px 0 80px;
+  text-align: left;
+}
+
+.exp-badge-cluster {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.expedition-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: var(--exp-amber);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.expedition-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--exp-amber);
+  box-shadow: 0 0 8px var(--exp-amber);
+}
+
+.coord-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--exp-paper-muted);
+  letter-spacing: .05em;
+}
+
+.exp-hero h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: clamp(44px, 7.5vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--exp-paper);
+  max-width: 960px;
+}
+
+.exp-hero h1 em {
+  font-style: italic;
+  font-weight: 300;
+  background: linear-gradient(135deg, #F59E0B 0%, #FDE68A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.exp-hero-sub-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 40px;
+  margin-top: 36px;
+  align-items: end;
+}
+
+.exp-hero p.lede {
+  font-size: 18px;
+  color: #BAC4D6;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.exp-hero-stats {
+  display: flex;
+  gap: 24px;
+  justify-content: flex-end;
+  font-family: 'JetBrains Mono', monospace;
+  border-left: 1px solid var(--exp-line);
+  padding-left: 28px;
+}
+
+.exp-stat-item span {
+  display: block;
+  font-size: 11px;
+  color: var(--exp-paper-muted);
+  text-transform: uppercase;
+}
+
+.exp-stat-item strong {
+  font-size: 22px;
+  color: var(--exp-paper);
+  font-weight: 500;
+}
+
+/* Topo Ridge Vector */
+.topo-strip {
+  margin: 60px 0 30px;
+  position: relative;
+}
+
+.topo-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  display: block;
+}
+
+.ridge-line {
+  fill: none;
+  stroke: url(#topo-gradient);
+  stroke-width: 2;
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: drawRidge 3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+}
+
+@keyframes drawRidge {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Expedition Trail */
+.expedition-trail {
+  position: relative;
+  padding: 40px 0 100px;
+}
+
+/* Fixed Climbing Line */
+.fixed-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, 
+    rgba(56, 189, 248, 0.2) 0%, 
+    rgba(245, 158, 11, 0.4) 50%, 
+    rgba(239, 68, 68, 0.8) 85%, 
+    #38BDF8 100%
+  );
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+}
+
+/* Waypoint Milestones (Camps) */
+.waypoint {
+  position: relative;
+  margin: 90px auto 40px;
+  text-align: center;
+  max-width: 680px;
+  z-index: 2;
+}
+
+.waypoint-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #0B111D;
+  border: 1px solid var(--exp-border);
+  padding: 8px 18px;
+  border-radius: 999px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  margin-bottom: 20px;
+}
+
+.alt-metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--exp-cyan);
+  letter-spacing: 0.05em;
+}
+
+.baro-metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--exp-paper-muted);
+  border-left: 1px solid var(--exp-line);
+  padding-left: 8px;
+}
+
+.waypoint h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(28px, 4.5vw, 42px);
+  font-weight: 500;
+  color: var(--exp-paper);
+  letter-spacing: -0.01em;
+}
+
+.waypoint-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--exp-amber);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.waypoint-brief {
+  color: #94A3B8;
+  font-size: 15px;
+  margin-top: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* Pitch Stations */
+.pitches {
+  position: relative;
+  margin-top: 40px;
+}
+
+.pitch {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  align-items: center;
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pitch.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Anchor Node */
+.carabiner {
+  grid-column: 2;
+  justify-self: center;
+  align-self: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0B111D;
+  border: 2px solid var(--exp-paper-muted);
+  box-shadow: 0 0 0 4px var(--exp-bg);
+  position: relative;
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+.pitch:hover .carabiner {
+  border-color: var(--exp-cyan);
+  transform: scale(1.3);
+  box-shadow: 0 0 16px var(--exp-cyan), 0 0 0 4px var(--exp-bg);
+}
+
+.pitch.deathzone .carabiner {
+  border-color: var(--exp-hazard);
+}
+
+.pitch.deathzone:hover .carabiner {
+  box-shadow: 0 0 16px var(--exp-hazard), 0 0 0 4px var(--exp-bg);
+}
+
+.pitch.summit-ridge .carabiner {
+  border-color: #38BDF8;
+  background: var(--exp-cyan);
+}
+
+/* Alpine Cards */
+.pitch-card {
+  background: var(--exp-card-surface);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--exp-border);
+  border-radius: 8px;
+  padding: 24px 28px;
+  max-width: 460px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pitch-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
+.pitch:hover .pitch-card {
+  background: var(--exp-card-surface-hover);
+  border-color: rgba(56, 189, 248, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+}
+
+.pitch.deathzone:hover .pitch-card {
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* Horizontal Connector Lines */
+.pitch-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  background: var(--exp-border);
+  z-index: 1;
+}
+
+/* Left-hand items (Port) */
+.pitch.port .pitch-card {
+  grid-column: 1;
+  justify-self: end;
+  text-align: right;
+}
+
+.pitch.port .pitch-card::after {
+  right: -30px;
+  width: 30px;
+}
+
+/* Right-hand items (Starboard) */
+.pitch.starboard .pitch-card {
+  grid-column: 3;
+  justify-self: start;
+  text-align: left;
+}
+
+.pitch.starboard .pitch-card::after {
+  left: -30px;
+  width: 30px;
+}
+
+/* Card Meta & Typography */
+.pitch-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pitch.port .pitch-meta {
+  justify-content: flex-end;
+}
+
+.pitch-station {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--exp-cyan);
+  text-transform: uppercase;
+}
+
+.pitch.deathzone .pitch-station {
+  color: var(--exp-hazard);
+}
+
+.pitch-card h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--exp-paper);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.pitch-gear {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--exp-amber);
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.pitch-desc {
+  font-size: 14.5px;
+  color: #9AA1B2;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* Summit Pinnacle */
+.summit-pinnacle {
+  text-align: center;
+  padding: 100px 0 60px;
+  position: relative;
+  z-index: 2;
+}
+
+.prayer-flags {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.flag-tag {
+  width: 28px;
+  height: 18px;
+  border-radius: 2px;
+  opacity: 0.85;
+}
+
+.flag-blue { background: #2563EB; }
+.flag-white { background: #E2E8F0; }
+.flag-red { background: #DC2626; }
+.flag-green { background: #16A34A; }
+.flag-yellow { background: #EAB308; }
+
+.summit-pinnacle h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 500;
+  color: var(--exp-paper);
+  line-height: 1.05;
+}
+
+.summit-pinnacle p {
+  font-size: 17px;
+  max-width: 580px;
+  margin: 20px auto 0;
+  color: #BAC4D6;
+  font-weight: 300;
+}
+
+/* Logbook Guide */
+.logbook {
+  max-width: 820px;
+  margin: 40px auto 120px;
+  background: var(--exp-card-surface);
+  border: 1px solid var(--exp-border);
+  border-radius: 8px;
+  padding: 48px;
+  position: relative;
+  backdrop-filter: blur(12px);
+}
+
+.logbook h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--exp-amber);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logbook h3::before {
+  content: "■";
+  font-size: 8px;
+  color: var(--exp-amber);
+}
+
+.logbook ul {
+  list-style: none;
+}
+
+.logbook li {
+  font-size: 15px;
+  color: #BAC4D6;
+  padding: 16px 0;
+  border-top: 1px solid var(--exp-line);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.logbook li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.logbook li strong {
+  color: var(--exp-paper);
+  font-weight: 500;
+}
+
+.exp-footer {
+  text-align: center;
+  padding-bottom: 80px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #4B5565;
+  letter-spacing: 0.05em;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 820px) {
+  .exp-hero-sub-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .exp-hero-stats {
+    justify-content: flex-start;
+    border-left: none;
+    padding-left: 0;
+  }
+  
+  .fixed-line {
+    left: 30px;
+    transform: none;
+  }
+  .waypoint {
+    text-align: left;
+    padding-left: 65px;
+  }
+  
+  .pitch {
+    grid-template-columns: 60px 1fr !important;
+    margin-bottom: 24px;
+  }
+  .pitch .carabiner {
+    grid-column: 1 !important;
+    justify-self: center;
+  }
+  .pitch.port .pitch-card,
+  .pitch.starboard .pitch-card {
+    grid-column: 2 !important;
+    justify-self: start;
+    text-align: left;
+    max-width: 100%;
+  }
+  .pitch.port .pitch-meta {
+    justify-content: flex-start;
+  }
+  .pitch.port .pitch-card::after,
+  .pitch.starboard .pitch-card::after {
+    left: -30px !important;
+    right: auto !important;
+    width: 30px !important;
+  }
+  
+  .logbook {
+    padding: 32px 24px;
+  }
+}

@@ -24,6 +24,7 @@ export default function Footer() {
             <ul className="footer-nav-links">
               <li><Link href="/">All Tutorials</Link></li>
               <li><Link href="/tutorials">Latest Guides</Link></li>
+              <li><Link href="/expedition">8,848M AI Expedition</Link></li>
               <li><Link href="/about">About Author</Link></li>
             </ul>
           </div>
