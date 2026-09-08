@@ -25,7 +25,6 @@ export default function Footer() {
               <li><Link href="/system-design">System Design</Link></li>
               <li><Link href="/expedition">8,000M Expeditions</Link></li>
               <li><Link href="/blog">Engineering Blog</Link></li>
-              <li><Link href="/services">Services &amp; Advisory</Link></li>
               <li><Link href="/about">About Vishwajeet</Link></li>
             </ul>
           </div>
