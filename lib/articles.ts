@@ -57,9 +57,9 @@ export function getAllArticles(): ArticleMeta[] {
         tagClass: data.tagClass || 'tag-react',
         tags: data.tags || [],
         author: data.author || {
-          name: 'Editorial Team',
-          role: 'Contributor',
-          avatar: 'ED'
+          name: 'Vishwajeet Gupta',
+          role: 'Founder, 2AMCoding',
+          avatar: 'VG'
         },
         featured: Boolean(data.featured)
       };
@@ -117,9 +117,9 @@ export function getArticleBySlug(slug: string): ArticleDetail | null {
       tagClass: data.tagClass || 'tag-react',
       tags: data.tags || [],
       author: data.author || {
-        name: 'Editorial Team',
-        role: 'Contributor',
-        avatar: 'ED'
+        name: 'Vishwajeet Gupta',
+        role: 'Founder, 2AMCoding',
+        avatar: 'VG'
       },
       featured: Boolean(data.featured),
       content,

@@ -9,7 +9,7 @@ export default function ShareButtons({ title }: { title: string }) {
 
   const handleShareTwitter = () => {
     const url = typeof window !== 'undefined' ? window.location.href : '';
-    const text = encodeURIComponent(`Check out "${title}" on CodeCraft!`);
+    const text = encodeURIComponent(`Check out "${title}" on 2AMCoding!`);
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
   };
 

@@ -25,11 +25,11 @@ export async function generateMetadata({
   const article = getArticleBySlug(slug);
 
   if (!article) {
-    return { title: 'Article Not Found — CodeCraft' };
+    return { title: 'Article Not Found — 2AMCoding' };
   }
 
   return {
-    title: `${article.title} — CodeCraft`,
+    title: `${article.title} — 2AMCoding`,
     description: article.description,
     openGraph: {
       title: article.title,

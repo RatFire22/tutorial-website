@@ -4,8 +4,8 @@ import { GithubIcon, TwitterIcon, LinkedinIcon } from '@/components/Icons';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About — CodeCraft & Alex Chen',
-  description: 'About the author, writing philosophy, technical background, and site architecture.',
+  title: 'About — 2AMCoding & Vishwajeet Gupta',
+  description: 'About 2AMCoding, the writing philosophy, technical background, and site architecture.',
 };
 
 export default function AboutPage() {
@@ -22,14 +22,14 @@ export default function AboutPage() {
             className="author-full-avatar"
             style={{ width: 64, height: 64, fontSize: '1.5rem' }}
           >
-            AC
+            VG
           </div>
           <div className="author-full-info">
             <h1 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-              Alex Chen
+              Vishwajeet Gupta
             </h1>
             <p style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>
-              Staff Software Engineer • Systems &amp; Web Architect
+              Founder, 2AMCoding • Systems &amp; Web Engineer
             </p>
           </div>
         </div>
@@ -37,7 +37,7 @@ export default function AboutPage() {
 
       <div className="article-prose">
         <p>
-          Welcome to <strong>CodeCraft</strong>. I write deep, actionable technical articles focusing on high-performance web systems, distributed architectures, and pragmatic developer tooling.
+          Welcome to <strong>2AMCoding</strong>. The name comes from that unmistakable late-night flow state where curiosity takes over, side projects come alive, and the most satisfying technical breakthroughs happen.
         </p>
 
         <p>

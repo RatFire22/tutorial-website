@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Code2, Heart } from 'lucide-react';
+import { Moon, Heart } from 'lucide-react';
 import { GithubIcon, TwitterIcon, LinkedinIcon } from '@/components/Icons';
 
 export default function Footer() {
@@ -9,13 +9,13 @@ export default function Footer() {
         <div className="footer-top">
           <div className="footer-brand">
             <Link href="/" className="brand-logo">
-              <div className="brand-icon">
-                <Code2 size={18} />
+              <div className="brand-icon" style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #0284c7 100%)' }}>
+                <Moon size={16} color="#facc15" fill="#facc15" />
               </div>
-              <span>CodeCraft</span>
+              <span>2AMCoding</span>
             </Link>
             <p>
-              In-depth technical guides, modern architecture breakdowns, and actionable developer tutorials. Hosted seamlessly on Vercel.
+              Late-night technical guides, deep system architecture breakdowns, and flow-state developer tutorials. Hosted seamlessly on Vercel.
             </p>
           </div>
 
@@ -62,7 +62,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <div>
-            © {new Date().getFullYear()} CodeCraft. Built with Next.js &amp; Vanilla CSS. Free on Vercel.
+            © {new Date().getFullYear()} 2AMCoding. Built with Next.js &amp; Vanilla CSS. Free on Vercel.
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             Crafted with <Heart size={14} color="#ef4444" fill="#ef4444" /> for developers

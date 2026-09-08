@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Code2 } from 'lucide-react';
+import { Search, Moon } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import SearchModal from './SearchModal';
 import { ArticleMeta } from '@/lib/articles';
@@ -18,10 +18,10 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
         <div className="container nav-inner">
           {/* Logo */}
           <Link href="/" className="brand-logo">
-            <div className="brand-icon">
-              <Code2 size={18} />
+            <div className="brand-icon" style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #0284c7 100%)' }}>
+              <Moon size={16} color="#facc15" fill="#facc15" />
             </div>
-            <span>CodeCraft</span>
+            <span>2AMCoding</span>
           </Link>
 
           {/* Nav Links */}

@@ -3,7 +3,7 @@ import ArticleCard from '@/components/ArticleCard';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'All Guides & Tutorials — CodeCraft',
+  title: 'All Guides & Tutorials — 2AMCoding',
   description: 'Browse the complete archive of technical guides, system architecture breakdowns, and frontend patterns.',
 };
 

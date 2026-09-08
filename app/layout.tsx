@@ -5,12 +5,12 @@ import Footer from '@/components/Footer';
 import { getAllArticles } from '@/lib/articles';
 
 export const metadata: Metadata = {
-  title: 'CodeCraft — Deep Technical Guides & Tutorials',
-  description: 'In-depth tutorials, expert insights, and modern architectural deep dives for modern software engineers. Free on Vercel.',
-  keywords: ['Next.js', 'TypeScript', 'Edge Computing', 'CSS', 'Rust', 'Web Development', 'Tutorials', 'Blog'],
-  authors: [{ name: 'Alex Chen' }],
+  title: '2AMCoding — Late-Night Engineering Guides & Deep Dives',
+  description: 'In-depth tutorials, system architecture breakdowns, and flow-state engineering guides by 2AMCoding. Free on Vercel.',
+  keywords: ['Next.js', 'TypeScript', 'Edge Computing', 'CSS', 'Rust', 'Web Development', 'Tutorials', 'Blog', '2AMCoding'],
+  authors: [{ name: 'Vishwajeet Gupta' }],
   openGraph: {
-    title: 'CodeCraft — Modern Technical Tutorials & Guides',
+    title: '2AMCoding — Modern Developer Tutorials & Deep Dives',
     description: 'In-depth developer guides and tutorials with modern architecture.',
     type: 'website',
   },
