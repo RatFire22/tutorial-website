@@ -1,9 +1,11 @@
 import { MetadataRoute } from 'next';
 import { getAllArticles } from '@/lib/articles';
+import { getAllPitchParams } from '@/lib/summitsData';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://2amcoding.in';
   const articles = getAllArticles();
+  const pitchParams = getAllPitchParams();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -75,5 +77,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...articleRoutes];
+  const pitchRoutes: MetadataRoute.Sitemap = pitchParams.map((p) => ({
+    url: `${baseUrl}/expedition/${p.summit}/${p.pitch}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.75,
+  }));
+
+  return [...staticRoutes, ...articleRoutes, ...pitchRoutes];
 }

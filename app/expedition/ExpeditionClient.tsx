@@ -339,9 +339,34 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                                   <span>{isClimbed ? 'CLIMBED' : 'LOG PITCH'}</span>
                                 </button>
                               </div>
-                              <h3>{p.t}</h3>
+                              <Link
+                                href={`/expedition/${activeSummit}/pitch-${p.stopNum}`}
+                                style={{ textDecoration: 'none', color: 'inherit' }}
+                              >
+                                <h3 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                                  <span>{p.t}</span>
+                                  <ArrowRight size={14} style={{ opacity: 0.5, flexShrink: 0 }} />
+                                </h3>
+                              </Link>
                               <div className="pitch-gear">{p.tech}</div>
                               <p className="pitch-desc">{p.d}</p>
+                              <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                <Link
+                                  href={`/expedition/${activeSummit}/pitch-${p.stopNum}`}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    color: currentSummit.badgeColor,
+                                    textDecoration: 'none',
+                                  }}
+                                >
+                                  <span>View Blueprint</span>
+                                  <ArrowRight size={12} />
+                                </Link>
+                              </div>
                             </div>
                             <div className="carabiner" style={isClimbed ? { borderColor: '#22c55e' } : undefined} />
                             <div />
@@ -375,9 +400,34 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                                   <span>{isClimbed ? 'CLIMBED' : 'LOG PITCH'}</span>
                                 </button>
                               </div>
-                              <h3>{p.t}</h3>
+                              <Link
+                                href={`/expedition/${activeSummit}/pitch-${p.stopNum}`}
+                                style={{ textDecoration: 'none', color: 'inherit' }}
+                              >
+                                <h3 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+                                  <span>{p.t}</span>
+                                  <ArrowRight size={14} style={{ opacity: 0.5, flexShrink: 0 }} />
+                                </h3>
+                              </Link>
                               <div className="pitch-gear">{p.tech}</div>
                               <p className="pitch-desc">{p.d}</p>
+                              <div style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'flex-end' }}>
+                                <Link
+                                  href={`/expedition/${activeSummit}/pitch-${p.stopNum}`}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                    color: currentSummit.badgeColor,
+                                    textDecoration: 'none',
+                                  }}
+                                >
+                                  <span>View Blueprint</span>
+                                  <ArrowRight size={12} />
+                                </Link>
+                              </div>
                             </div>
                           </>
                         )}

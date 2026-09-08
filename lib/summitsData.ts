@@ -394,3 +394,56 @@ export const summits: Record<string, SummitConfig> = {
 export function getSummit(id: string): SummitConfig {
   return summits[id] || summits.everest;
 }
+
+export interface PitchDetail {
+  summit: SummitConfig;
+  stage: StageItem;
+  pitch: PitchItem;
+  prevPitch?: { summitId: string; stopNum: string; title: string };
+  nextPitch?: { summitId: string; stopNum: string; title: string };
+}
+
+export function getPitchDetail(summitId: string, pitchNum: string): PitchDetail | null {
+  const summit = summits[summitId];
+  if (!summit) return null;
+
+  const allPitches: { stage: StageItem; pitch: PitchItem }[] = [];
+  for (const stage of summit.stages) {
+    for (const pitch of stage.pitches) {
+      allPitches.push({ stage, pitch });
+    }
+  }
+
+  const cleanNum = pitchNum.replace(/^pitch-?/i, '').padStart(2, '0');
+  const index = allPitches.findIndex((p) => p.pitch.stopNum === cleanNum);
+  if (index === -1) return null;
+
+  const current = allPitches[index];
+  const prev = index > 0 ? allPitches[index - 1] : undefined;
+  const next = index < allPitches.length - 1 ? allPitches[index + 1] : undefined;
+
+  return {
+    summit,
+    stage: current.stage,
+    pitch: current.pitch,
+    prevPitch: prev ? { summitId, stopNum: prev.pitch.stopNum, title: prev.pitch.t } : undefined,
+    nextPitch: next ? { summitId, stopNum: next.pitch.stopNum, title: next.pitch.t } : undefined,
+  };
+}
+
+export function getAllPitchParams(): { summit: string; pitch: string }[] {
+  const params: { summit: string; pitch: string }[] = [];
+  for (const summitId of ['everest', 'k2', 'kangchenjunga']) {
+    const summit = summits[summitId];
+    if (!summit) continue;
+    for (const stage of summit.stages) {
+      for (const pitch of stage.pitches) {
+        params.push({
+          summit: summitId,
+          pitch: `pitch-${pitch.stopNum}`,
+        });
+      }
+    }
+  }
+  return params;
+}
