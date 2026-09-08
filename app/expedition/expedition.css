@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+/* Default (Dark Mode tokens) */
 .expedition-root {
   --exp-bg: #070A10;
   --exp-paper: #F4EFE6;
@@ -12,14 +13,62 @@
   --exp-border: rgba(224, 242, 254, 0.12);
   --exp-card-surface: rgba(13, 19, 32, 0.65);
   --exp-card-surface-hover: rgba(21, 30, 50, 0.85);
+  --exp-carabiner-bg: #0B111D;
+  --exp-badge-bg: #0B111D;
+  --exp-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --exp-card-shadow-hover: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+  --exp-lede: #BAC4D6;
+  --exp-brief: #94A3B8;
+  --exp-desc: #9AA1B2;
+  --exp-pinnacle-desc: #BAC4D6;
+  --exp-logbook-text: #BAC4D6;
+  --exp-grid-line: rgba(255, 255, 255, 0.02);
+  --exp-bg-gradient: radial-gradient(circle at 50% 0%, #152238 0%, var(--exp-bg) 45%);
+  --exp-climb-line: linear-gradient(to bottom, rgba(56, 189, 248, 0.2) 0%, rgba(245, 158, 11, 0.4) 50%, rgba(239, 68, 68, 0.8) 85%, #38BDF8 100%);
+  --exp-card-shimmer: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  --exp-footer-text: #4B5565;
+  --exp-pill-bg: rgba(245, 158, 11, 0.12);
+  --exp-pill-border: rgba(245, 158, 11, 0.35);
 
   font-family: 'Inter', sans-serif;
   color: var(--exp-paper);
-  background: radial-gradient(circle at 50% 0%, #152238 0%, var(--exp-bg) 45%);
+  background: var(--exp-bg-gradient);
   line-height: 1.6;
   position: relative;
   overflow-x: hidden;
   min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Light Theme overrides when [data-theme='light'] */
+[data-theme='light'] .expedition-root {
+  --exp-bg: #F8FAFC;
+  --exp-paper: #0F172A;
+  --exp-paper-muted: #64748B;
+  --exp-ice: #0284C7;
+  --exp-cyan: #0284C7;
+  --exp-amber: #D97706;
+  --exp-hazard: #DC2626;
+  --exp-line: rgba(15, 23, 42, 0.08);
+  --exp-border: rgba(226, 232, 240, 0.95);
+  --exp-card-surface: rgba(255, 255, 255, 0.92);
+  --exp-card-surface-hover: #FFFFFF;
+  --exp-carabiner-bg: #FFFFFF;
+  --exp-badge-bg: #FFFFFF;
+  --exp-card-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  --exp-card-shadow-hover: 0 16px 32px -8px rgba(15, 23, 42, 0.12);
+  --exp-lede: #334155;
+  --exp-brief: #475569;
+  --exp-desc: #475569;
+  --exp-pinnacle-desc: #334155;
+  --exp-logbook-text: #334155;
+  --exp-grid-line: rgba(15, 23, 42, 0.035);
+  --exp-bg-gradient: radial-gradient(circle at 50% 0%, #E0F2FE 0%, var(--exp-bg) 50%);
+  --exp-climb-line: linear-gradient(to bottom, rgba(2, 132, 199, 0.35) 0%, rgba(217, 119, 6, 0.55) 50%, rgba(220, 38, 38, 0.85) 85%, #0284C7 100%);
+  --exp-card-shimmer: linear-gradient(90deg, transparent, rgba(2, 132, 199, 0.2), transparent);
+  --exp-footer-text: #64748B;
+  --exp-pill-bg: rgba(217, 119, 6, 0.1);
+  --exp-pill-border: rgba(217, 119, 6, 0.3);
 }
 
 /* Glacial Grid */
@@ -31,8 +80,8 @@
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(var(--exp-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--exp-grid-line) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
   z-index: 0;
@@ -67,12 +116,13 @@
   text-transform: uppercase;
   padding: 6px 14px;
   border-radius: 999px;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: var(--exp-pill-bg);
+  border: 1px solid var(--exp-pill-border);
   color: var(--exp-amber);
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-weight: 600;
 }
 
 .expedition-pill::before {
@@ -89,6 +139,7 @@
   font-size: 11px;
   color: var(--exp-paper-muted);
   letter-spacing: .05em;
+  font-weight: 500;
 }
 
 .exp-hero h1 {
@@ -103,7 +154,13 @@
 
 .exp-hero h1 em {
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-theme='dark'] .exp-hero h1 em {
   background: linear-gradient(135deg, #F59E0B 0%, #FDE68A 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -119,7 +176,7 @@
 
 .exp-hero p.lede {
   font-size: 18px;
-  color: #BAC4D6;
+  color: var(--exp-lede);
   font-weight: 300;
   line-height: 1.65;
 }
@@ -138,12 +195,13 @@
   font-size: 11px;
   color: var(--exp-paper-muted);
   text-transform: uppercase;
+  font-weight: 600;
 }
 
 .exp-stat-item strong {
   font-size: 22px;
   color: var(--exp-paper);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Topo Ridge Vector */
@@ -162,7 +220,7 @@
 .ridge-line {
   fill: none;
   stroke: url(#topo-gradient);
-  stroke-width: 2;
+  stroke-width: 2.5;
   stroke-dasharray: 2000;
   stroke-dashoffset: 2000;
   animation: drawRidge 3s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
@@ -187,12 +245,7 @@
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(to bottom, 
-    rgba(56, 189, 248, 0.2) 0%, 
-    rgba(245, 158, 11, 0.4) 50%, 
-    rgba(239, 68, 68, 0.8) 85%, 
-    #38BDF8 100%
-  );
+  background: var(--exp-climb-line);
   transform: translateX(-50%);
   box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
 }
@@ -210,12 +263,13 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: #0B111D;
+  background: var(--exp-badge-bg);
   border: 1px solid var(--exp-border);
   padding: 8px 18px;
   border-radius: 999px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  box-shadow: var(--exp-card-shadow);
   margin-bottom: 20px;
+  backdrop-filter: blur(12px);
 }
 
 .alt-metric {
@@ -223,6 +277,7 @@
   font-size: 11px;
   color: var(--exp-cyan);
   letter-spacing: 0.05em;
+  font-weight: 700;
 }
 
 .baro-metric {
@@ -231,6 +286,7 @@
   color: var(--exp-paper-muted);
   border-left: 1px solid var(--exp-line);
   padding-left: 8px;
+  font-weight: 600;
 }
 
 .waypoint h2 {
@@ -246,14 +302,14 @@
   font-size: 15px;
   color: var(--exp-amber);
   margin-top: 4px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .waypoint-brief {
-  color: #94A3B8;
+  color: var(--exp-brief);
   font-size: 15px;
   margin-top: 14px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
 }
 
@@ -286,7 +342,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #0B111D;
+  background: var(--exp-carabiner-bg);
   border: 2px solid var(--exp-paper-muted);
   box-shadow: 0 0 0 4px var(--exp-bg);
   position: relative;
@@ -309,7 +365,7 @@
 }
 
 .pitch.summit-ridge .carabiner {
-  border-color: #38BDF8;
+  border-color: #0284C7;
   background: var(--exp-cyan);
 }
 
@@ -319,12 +375,12 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--exp-border);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px 28px;
   max-width: 460px;
   position: relative;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--exp-card-shadow);
 }
 
 .pitch-card::before {
@@ -334,14 +390,14 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background: var(--exp-card-shimmer);
 }
 
 .pitch:hover .pitch-card {
   background: var(--exp-card-surface-hover);
-  border-color: rgba(56, 189, 248, 0.3);
+  border-color: rgba(56, 189, 248, 0.4);
   transform: translateY(-3px);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--exp-card-shadow-hover);
 }
 
 .pitch.deathzone:hover .pitch-card {
@@ -400,6 +456,7 @@
   letter-spacing: 0.05em;
   color: var(--exp-cyan);
   text-transform: uppercase;
+  font-weight: 600;
 }
 
 .pitch.deathzone .pitch-station {
@@ -409,7 +466,7 @@
 .pitch-card h3 {
   font-family: 'Fraunces', serif;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--exp-paper);
   margin-bottom: 8px;
   letter-spacing: -0.01em;
@@ -420,14 +477,14 @@
   font-size: 12px;
   color: var(--exp-amber);
   margin-bottom: 12px;
-  opacity: 0.9;
+  font-weight: 500;
 }
 
 .pitch-desc {
   font-size: 14.5px;
-  color: #9AA1B2;
+  color: var(--exp-desc);
   line-height: 1.6;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 /* Summit Pinnacle */
@@ -449,7 +506,7 @@
   width: 28px;
   height: 18px;
   border-radius: 2px;
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
 .flag-blue { background: #2563EB; }
@@ -470,8 +527,9 @@
   font-size: 17px;
   max-width: 580px;
   margin: 20px auto 0;
-  color: #BAC4D6;
-  font-weight: 300;
+  color: var(--exp-pinnacle-desc);
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 /* Logbook Guide */
@@ -480,10 +538,11 @@
   margin: 40px auto 120px;
   background: var(--exp-card-surface);
   border: 1px solid var(--exp-border);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 48px;
   position: relative;
   backdrop-filter: blur(12px);
+  box-shadow: var(--exp-card-shadow);
 }
 
 .logbook h3 {
@@ -496,6 +555,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  font-weight: 700;
 }
 
 .logbook h3::before {
@@ -506,14 +566,16 @@
 
 .logbook ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .logbook li {
   font-size: 15px;
-  color: #BAC4D6;
+  color: var(--exp-logbook-text);
   padding: 16px 0;
   border-top: 1px solid var(--exp-line);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.6;
 }
 
@@ -524,7 +586,7 @@
 
 .logbook li strong {
   color: var(--exp-paper);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .exp-footer {
@@ -532,8 +594,9 @@
   padding-bottom: 80px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
-  color: #4B5565;
+  color: var(--exp-footer-text);
   letter-spacing: 0.05em;
+  font-weight: 500;
 }
 
 /* Responsive Breakpoints */

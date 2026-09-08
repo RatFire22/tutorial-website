@@ -24,7 +24,23 @@ export default function RootLayout({
   const articles = getAllArticles();
 
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="light" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('site-theme');
+                  if (saved) {
+                    document.documentElement.setAttribute('data-theme', saved);
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body>
         <div className="ambient-glow-top" />
         <Navbar articles={articles} />
