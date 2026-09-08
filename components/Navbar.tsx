@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Moon, ChevronDown } from 'lucide-react';
@@ -10,17 +10,69 @@ import { ArticleMeta } from '@/lib/articles';
 
 export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const [isLearnAIOpen, setIsLearnAIOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const navHeaderRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
+
+  // Clear timer and open the target dropdown smoothly
+  const handleMouseEnter = (dropdownName: string) => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setActiveDropdown(dropdownName);
+  };
+
+  // Grace period timer (250ms) so moving mouse into dropdown never causes flicker or disappearance
+  const handleMouseLeave = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+    closeTimerRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+      closeTimerRef.current = null;
+    }, 250);
+  };
+
+  const handleTriggerClick = (dropdownName: string) => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setActiveDropdown((prev) => (prev === dropdownName ? null : dropdownName));
+  };
+
+  const closeAllDropdowns = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setActiveDropdown(null);
+  };
+
+  // Close when clicking outside of the header navigation
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent) => {
+      if (navHeaderRef.current && !navHeaderRef.current.contains(e.target as Node)) {
+        closeAllDropdowns();
+      }
+    };
+    document.addEventListener('mousedown', handleDocumentClick);
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentClick);
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
-      <header className="header-nav">
+      <header className="header-nav" ref={navHeaderRef}>
         <div className="container nav-inner">
           {/* Logo */}
-          <Link href="/" className="brand-logo">
+          <Link href="/" className="brand-logo" onClick={closeAllDropdowns}>
             <div className="brand-icon" style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #4338ca 50%, #0284c7 100%)' }}>
               <Moon size={16} color="#facc15" fill="#facc15" />
             </div>
@@ -33,25 +85,29 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               {/* System Design Dropdown with LLD & HLD */}
               <li
                 className="nav-dropdown-wrapper"
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
+                onMouseEnter={() => handleMouseEnter('system-design')}
+                onMouseLeave={handleMouseLeave}
               >
                 <button
                   type="button"
                   className={`nav-dropdown-trigger ${pathname.startsWith('/system-design') ? 'active' : ''}`}
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  aria-expanded={isDropdownOpen}
+                  onClick={() => handleTriggerClick('system-design')}
+                  aria-expanded={activeDropdown === 'system-design'}
                 >
                   <span>System Design</span>
                   <ChevronDown size={14} className="chevron" />
                 </button>
 
-                {isDropdownOpen && (
-                  <div className="nav-dropdown-menu">
+                {activeDropdown === 'system-design' && (
+                  <div
+                    className="nav-dropdown-menu"
+                    onMouseEnter={() => handleMouseEnter('system-design')}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <Link
                       href="/system-design/lld"
                       className="nav-dropdown-item"
-                      onClick={() => setIsDropdownOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>LLD</span>
@@ -65,7 +121,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/system-design/hld"
                       className="nav-dropdown-item"
-                      onClick={() => setIsDropdownOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>HLD</span>
@@ -81,7 +137,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/system-design"
                       className="nav-dropdown-item"
-                      onClick={() => setIsDropdownOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
                         Overview &amp; Core Pillars
@@ -90,28 +146,34 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                   </div>
                 )}
               </li>
+
               {/* Learn AI Dropdown */}
               <li
                 className="nav-dropdown-wrapper"
-                onMouseEnter={() => setIsLearnAIOpen(true)}
-                onMouseLeave={() => setIsLearnAIOpen(false)}
+                onMouseEnter={() => handleMouseEnter('learn-ai')}
+                onMouseLeave={handleMouseLeave}
               >
                 <button
                   type="button"
                   className={`nav-dropdown-trigger ${pathname === '/expedition' ? 'active' : ''}`}
-                  onClick={() => setIsLearnAIOpen(!isLearnAIOpen)}
-                  aria-expanded={isLearnAIOpen}
+                  onClick={() => handleTriggerClick('learn-ai')}
+                  aria-expanded={activeDropdown === 'learn-ai'}
                 >
                   <span>Learn AI</span>
                   <ChevronDown size={14} className="chevron" />
                 </button>
 
-                {isLearnAIOpen && (
-                  <div className="nav-dropdown-menu" style={{ minWidth: 290 }}>
+                {activeDropdown === 'learn-ai' && (
+                  <div
+                    className="nav-dropdown-menu"
+                    style={{ minWidth: 290 }}
+                    onMouseEnter={() => handleMouseEnter('learn-ai')}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <Link
                       href="/expedition#foundations"
                       className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Stage 01: Base Camp</span>
@@ -125,7 +187,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/expedition#rag"
                       className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Stage 02: Khumbu Icefall &amp; Camp I</span>
@@ -139,7 +201,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/expedition#agents"
                       className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Stage 03: Camp II (Western Cwm)</span>
@@ -153,7 +215,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/expedition#mcp"
                       className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Stage 04: Camp III (Lhotse Face)</span>
@@ -167,7 +229,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/expedition#reliability"
                       className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Stage 05: South Col (Death Zone)</span>
@@ -181,7 +243,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/expedition#summit"
                       className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Stage 06: Hillary Step to Summit</span>
@@ -197,7 +259,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/expedition"
                       className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
                         Full 8,848M Route &amp; 30 Pitches
@@ -206,36 +268,45 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                   </div>
                 )}
               </li>
+
+              {/* Blog Link */}
               <li>
                 <Link
                   href="/blog"
                   className={`nav-link ${pathname.startsWith('/blog') ? 'active' : ''}`}
+                  onClick={closeAllDropdowns}
                 >
                   Blog
                 </Link>
               </li>
+
               {/* Services Dropdown */}
               <li
                 className="nav-dropdown-wrapper"
-                onMouseEnter={() => setIsServicesOpen(true)}
-                onMouseLeave={() => setIsServicesOpen(false)}
+                onMouseEnter={() => handleMouseEnter('services')}
+                onMouseLeave={handleMouseLeave}
               >
                 <button
                   type="button"
                   className={`nav-dropdown-trigger ${pathname.startsWith('/services') ? 'active' : ''}`}
-                  onClick={() => setIsServicesOpen(!isServicesOpen)}
-                  aria-expanded={isServicesOpen}
+                  onClick={() => handleTriggerClick('services')}
+                  aria-expanded={activeDropdown === 'services'}
                 >
                   <span>Services</span>
                   <ChevronDown size={14} className="chevron" />
                 </button>
 
-                {isServicesOpen && (
-                  <div className="nav-dropdown-menu" style={{ minWidth: 260 }}>
+                {activeDropdown === 'services' && (
+                  <div
+                    className="nav-dropdown-menu"
+                    style={{ minWidth: 260 }}
+                    onMouseEnter={() => handleMouseEnter('services')}
+                    onMouseLeave={handleMouseLeave}
+                  >
                     <Link
                       href="/services#resume-review"
                       className="nav-dropdown-item"
-                      onClick={() => setIsServicesOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Resume Review</span>
@@ -249,7 +320,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/services#one-on-one"
                       className="nav-dropdown-item"
-                      onClick={() => setIsServicesOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>1-on-1 Call</span>
@@ -263,7 +334,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/services#mock-interview"
                       className="nav-dropdown-item"
-                      onClick={() => setIsServicesOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title">
                         <span>Mock Interview</span>
@@ -279,7 +350,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                     <Link
                       href="/services"
                       className="nav-dropdown-item"
-                      onClick={() => setIsServicesOpen(false)}
+                      onClick={closeAllDropdowns}
                     >
                       <div className="dropdown-item-title" style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
                         All Services &amp; Advisory
@@ -288,10 +359,13 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                   </div>
                 )}
               </li>
+
+              {/* About Link */}
               <li>
                 <Link
                   href="/about"
                   className={`nav-link ${pathname === '/about' ? 'active' : ''}`}
+                  onClick={closeAllDropdowns}
                 >
                   About
                 </Link>
