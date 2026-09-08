@@ -436,7 +436,7 @@
 /* Waypoint Milestones (Camps) */
 .waypoint {
   position: relative;
-  margin: 90px auto 40px;
+  margin: 40px auto 14px;
   text-align: center;
   max-width: 680px;
   z-index: 2;
@@ -448,10 +448,10 @@
   gap: 10px;
   background: var(--exp-badge-bg);
   border: 1px solid var(--exp-border);
-  padding: 8px 18px;
+  padding: 6px 16px;
   border-radius: 999px;
   box-shadow: var(--exp-card-shadow);
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   backdrop-filter: blur(12px);
 }
 
@@ -497,67 +497,66 @@
 }
 
 /* Pitch Stations */
-/* Continuous Mountain Switchback Rows (Candy Crush / Wizard of Oz Alpine Trail) */
-.pitch-switchback-row {
+/* Trail Canvas Wrapper & Continuous SVG Path */
+.trail-canvas-wrapper {
   position: relative;
   width: 100%;
-  min-height: 220px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 30px;
 }
 
-.pitch-switchback-row.in-view {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.switchback-svg {
+.continuous-trail-svg {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  overflow: visible;
   z-index: 2;
+  overflow: visible;
 }
 
-/* Candy Crush / Oz Tactile Crown Milestone Tile */
+/* Continuous Mountain Switchback Rows (Compact Height & Widescreen Usage) */
+.pitch-switchback-row {
+  position: relative;
+  width: 100%;
+  min-height: 104px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* Tactile Alpine Round Milestone Tile (Clean, No Crowns) */
 .milestone-node {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 58px;
-  height: 58px;
-  border-radius: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 20;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   user-select: none;
-  border: 3px solid #F59E0B;
+  border: 2.5px solid #F59E0B;
   background: radial-gradient(circle at 35% 35%, #1E293B 0%, #070A10 100%);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 16px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 10px rgba(245, 158, 11, 0.35);
   padding: 0;
 }
 
 .milestone-node:hover {
-  transform: translate(-50%, -50%) scale(1.18);
+  transform: translate(-50%, -50%) scale(1.15);
   border-color: #FDE047;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.8), 0 0 28px rgba(245, 158, 11, 0.75), inset 0 2px 6px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.8), 0 0 16px rgba(245, 158, 11, 0.6);
 }
 
 .milestone-node.climbed {
   border-color: #22C55E;
   background: linear-gradient(135deg, #15803D 0%, #22C55E 100%);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 26px rgba(34, 197, 94, 0.75), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 16px rgba(34, 197, 94, 0.65);
 }
 
 .milestone-node.is-next {
@@ -566,27 +565,58 @@
 }
 
 @keyframes nodePulse {
-  0%, 100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7), 0 0 18px rgba(245, 158, 11, 0.5); }
-  50% { box-shadow: 0 12px 28px rgba(0, 0, 0, 0.8), 0 0 32px rgba(251, 191, 36, 0.9); }
+  0%, 100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 14px rgba(245, 158, 11, 0.5); }
+  50% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 0 0 24px rgba(251, 191, 36, 0.8); }
 }
 
-/* Alpine Glassmorphism Dossier Card */
+/* Alpine Glassmorphism Dossier Card (Left/Right Alternating Layout) */
 .dossier-card {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 440px;
-  max-width: 46%;
+  width: 470px;
+  max-width: calc(48% - 24px);
   background: var(--exp-card-surface);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--exp-border);
-  border-radius: 14px;
-  padding: 22px 26px;
+  border-radius: 12px;
+  padding: 10px 18px;
   box-shadow: var(--exp-card-shadow);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 15;
+}
+
+/* Subtle Glowing Connector Bridges between Node and Card */
+.dossier-card.card-left::after {
+  content: "";
+  position: absolute;
+  right: -36px;
+  top: 50%;
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.75));
+  pointer-events: none;
+}
+
+.dossier-card.card-right::after {
+  content: "";
+  position: absolute;
+  left: -36px;
+  top: 50%;
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.75), rgba(245, 158, 11, 0.2));
+  pointer-events: none;
+}
+
+.dossier-card.climbed.card-left::after {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.75));
+}
+
+.dossier-card.climbed.card-right::after {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.75), rgba(34, 197, 94, 0.2));
 }
 
 .dossier-card::before {
@@ -793,23 +823,30 @@
   }
   
   .pitch-switchback-row {
-    min-height: 180px;
-    margin-bottom: 20px;
+    min-height: 100px;
+    margin-bottom: 8px;
   }
 
   .milestone-node {
-    left: 36px !important;
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 12px !important;
+    left: 24px !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 10px !important;
   }
 
   .dossier-card {
-    left: 78px !important;
+    left: 56px !important;
     right: auto !important;
-    width: calc(100% - 90px) !important;
+    width: calc(100% - 64px) !important;
     max-width: 100% !important;
-    padding: 16px 18px !important;
+    padding: 10px 14px !important;
+  }
+
+  .dossier-card.card-left::after,
+  .dossier-card.card-right::after {
+    left: -32px !important;
+    right: auto !important;
+    width: 32px !important;
   }
 
   .desktop-trail-path,
