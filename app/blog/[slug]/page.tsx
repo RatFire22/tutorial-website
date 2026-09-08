@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
-import { Clock, Calendar } from 'lucide-react';
+import { Clock, Calendar, ArrowLeft, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import ReadingProgress from '@/components/ReadingProgress';
 import TableOfContents from '@/components/TableOfContents';
@@ -54,6 +55,10 @@ export default async function ArticlePage({
   }
 
   const allArticles = getAllArticles();
+  const currentIndex = allArticles.findIndex((a) => a.slug === article.slug);
+  const prevArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
+  const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
+
   const relatedArticles = allArticles
     .filter((a) => a.slug !== article.slug)
     .slice(0, 3);
@@ -106,9 +111,80 @@ export default async function ArticlePage({
           <TableOfContents toc={article.toc} />
         </div>
 
+        {/* Previous & Next Article Navigation */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '1rem',
+            margin: '3.5rem 0 2rem 0',
+            paddingTop: '2rem',
+            borderTop: '1px solid var(--border-subtle)',
+          }}
+        >
+          {prevArticle ? (
+            <Link
+              href={`/blog/${prevArticle.slug}`}
+              style={{
+                padding: '1.25rem',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-card)',
+                borderRadius: 'var(--radius-md)',
+                textDecoration: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+              className="card-interactive-hover"
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.35rem', fontWeight: 600 }}>
+                <ArrowLeft size={13} />
+                <span>PREVIOUS BLUEPRINT</span>
+              </div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.35 }}>
+                {prevArticle.title}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--primary)', marginTop: '0.5rem', fontWeight: 600 }}>
+                {prevArticle.category} · {prevArticle.readTime}
+              </div>
+            </Link>
+          ) : <div />}
+
+          {nextArticle ? (
+            <Link
+              href={`/blog/${nextArticle.slug}`}
+              style={{
+                padding: '1.25rem',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-card)',
+                borderRadius: 'var(--radius-md)',
+                textDecoration: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                textAlign: 'right',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+              className="card-interactive-hover"
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '0.4rem', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.35rem', fontWeight: 600 }}>
+                <span>NEXT BLUEPRINT</span>
+                <ArrowRight size={13} />
+              </div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.35 }}>
+                {nextArticle.title}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--primary)', marginTop: '0.5rem', fontWeight: 600 }}>
+                {nextArticle.category} · {nextArticle.readTime}
+              </div>
+            </Link>
+          ) : <div />}
+        </div>
+
         {/* Related Articles Section */}
         {relatedArticles.length > 0 && (
-          <section style={{ margin: '3rem 0 6rem 0', borderTop: '1px solid var(--border-subtle)', paddingTop: '3rem' }}>
+          <section style={{ margin: '2rem 0 6rem 0', borderTop: '1px solid var(--border-subtle)', paddingTop: '2.5rem' }}>
             <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
               More Articles from the Blog
             </h3>

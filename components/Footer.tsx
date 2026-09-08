@@ -33,10 +33,10 @@ export default function Footer() {
           <div className="footer-nav-col">
             <h5>System Design</h5>
             <ul className="footer-nav-links">
-              <li><Link href="/system-design/lld">LLD (Low-Level Design)</Link></li>
-              <li><Link href="/system-design/hld">HLD (High-Level Design)</Link></li>
-              <li><Link href="/system-design">Architecture Blueprints</Link></li>
-              <li><Link href="/expedition">AI System Swarms</Link></li>
+              <li><Link href="/system-design/hld/expedition">K2 Expedition (8,611M HLD)</Link></li>
+              <li><Link href="/system-design/lld/expedition">Kangchenjunga (8,586M LLD)</Link></li>
+              <li><Link href="/system-design/hld">HLD Problem Directory</Link></li>
+              <li><Link href="/system-design/lld">LLD Problem Directory</Link></li>
             </ul>
           </div>
 
@@ -44,17 +44,22 @@ export default function Footer() {
             <h5>Connect</h5>
             <ul className="footer-nav-links">
               <li>
-                <a href="https://github.com" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <a href="mailto:vishwajeet@2amcoding.in" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <span>✉️</span> Email Vishwajeet
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/vishwajeetgupta" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <GithubIcon size={15} /> GitHub
                 </a>
               </li>
               <li>
-                <a href="https://twitter.com" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <a href="https://x.com/vishwajeetgupta" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <TwitterIcon size={15} /> Twitter / X
                 </a>
               </li>
               <li>
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <a href="https://linkedin.com/in/vishwajeetgupta" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <LinkedinIcon size={15} /> LinkedIn
                 </a>
               </li>

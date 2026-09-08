@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { summits, SummitConfig } from '@/lib/summitsData';
-import { Mountain, ArrowRight } from 'lucide-react';
+import { Mountain, ArrowRight, CheckCircle2, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 
 function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
@@ -19,6 +19,46 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
 
   const currentSummit: SummitConfig = summits[activeSummit] || summits.everest;
   const expeditionRoute = currentSummit.stages;
+
+  // LocalStorage ascent tracker
+  const [climbedPitches, setClimbedPitches] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const raw = localStorage.getItem(`2amcoding_climbed_${activeSummit}`);
+        if (raw) {
+          setClimbedPitches(JSON.parse(raw));
+        } else {
+          setClimbedPitches({});
+        }
+      } catch {
+        setClimbedPitches({});
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [activeSummit]);
+
+  const togglePitch = (stopNum: string) => {
+    setClimbedPitches((prev) => {
+      const next = { ...prev, [stopNum]: !prev[stopNum] };
+      try {
+        localStorage.setItem(`2amcoding_climbed_${activeSummit}`, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const resetAscent = () => {
+    setClimbedPitches({});
+    try {
+      localStorage.removeItem(`2amcoding_climbed_${activeSummit}`);
+    } catch {}
+  };
+
+  const totalPitches = expeditionRoute.reduce((acc, stage) => acc + stage.pitches.length, 0);
+  const climbedCount = Object.values(climbedPitches).filter(Boolean).length;
+  const ascentPercent = totalPitches > 0 ? Math.round((climbedCount / totalPitches) * 100) : 0;
 
   // Intersection observer for animation
   useEffect(() => {
@@ -168,6 +208,66 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
           </div>
         </div>
 
+        {/* Live Ascent Telemetry Tracker */}
+        <div
+          style={{
+            marginTop: '1.75rem',
+            padding: '1.15rem 1.5rem',
+            background: 'rgba(13, 19, 32, 0.75)',
+            border: '1px solid rgba(56, 189, 248, 0.25)',
+            borderRadius: 'var(--radius-lg)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1rem',
+          }}
+        >
+          <div style={{ flex: '1 1 300px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem' }}>
+              <span style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--exp-paper-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Climbing Log: {climbedCount} of {totalPitches} Pitches Logged
+              </span>
+              <span style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: '#38BDF8', fontWeight: 700 }}>
+                {ascentPercent}% To Summit
+              </span>
+            </div>
+            <div style={{ height: '7px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '999px', overflow: 'hidden' }}>
+              <div
+                style={{
+                  height: '100%',
+                  width: `${ascentPercent}%`,
+                  background: 'linear-gradient(90deg, #38BDF8, #22C55E)',
+                  transition: 'width 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              />
+            </div>
+          </div>
+
+          {climbedCount > 0 && (
+            <button
+              type="button"
+              onClick={resetAscent}
+              style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
+                color: '#ef4444',
+                fontSize: '0.725rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '4px 10px',
+                borderRadius: '6px',
+              }}
+            >
+              <RotateCcw size={11} />
+              <span>Reset Log</span>
+            </button>
+          )}
+        </div>
+
         {/* Topo Ridge Vector */}
         <div className="topo-strip">
           <svg className="topo-svg" viewBox="0 0 1000 140" preserveAspectRatio="none">
@@ -217,6 +317,7 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                     const sideClass = isPort ? 'port' : 'starboard';
                     const hazardClass = stage.hazard ? 'deathzone' : '';
                     const pinnacleClass = stage.pinnacle ? 'summit-ridge' : '';
+                    const isClimbed = Boolean(climbedPitches[p.stopNum]);
 
                     return (
                       <div
@@ -225,24 +326,66 @@ function ExpeditionContent({ initialSummit }: { initialSummit?: string }) {
                       >
                         {isPort ? (
                           <>
-                            <div className="pitch-card">
-                              <div className="pitch-meta">
+                            <div className="pitch-card" style={isClimbed ? { borderColor: 'rgba(34, 197, 94, 0.45)' } : undefined}>
+                              <div className="pitch-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <span className="pitch-station">PITCH {p.stopNum}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => togglePitch(p.stopNum)}
+                                  style={{
+                                    background: isClimbed ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                                    border: isClimbed ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
+                                    color: isClimbed ? '#22c55e' : 'var(--exp-paper-muted)',
+                                    borderRadius: '9999px',
+                                    padding: '2px 8px',
+                                    fontSize: '0.675rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    transition: 'all 0.15s ease',
+                                  }}
+                                >
+                                  <CheckCircle2 size={11} />
+                                  <span>{isClimbed ? 'CLIMBED' : 'LOG PITCH'}</span>
+                                </button>
                               </div>
                               <h3>{p.t}</h3>
                               <div className="pitch-gear">{p.tech}</div>
                               <p className="pitch-desc">{p.d}</p>
                             </div>
-                            <div className="carabiner" />
+                            <div className="carabiner" style={isClimbed ? { borderColor: '#22c55e' } : undefined} />
                             <div />
                           </>
                         ) : (
                           <>
                             <div />
-                            <div className="carabiner" />
-                            <div className="pitch-card">
-                              <div className="pitch-meta">
+                            <div className="carabiner" style={isClimbed ? { borderColor: '#22c55e' } : undefined} />
+                            <div className="pitch-card" style={isClimbed ? { borderColor: 'rgba(34, 197, 94, 0.45)' } : undefined}>
+                              <div className="pitch-meta" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <span className="pitch-station">PITCH {p.stopNum}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => togglePitch(p.stopNum)}
+                                  style={{
+                                    background: isClimbed ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                                    border: isClimbed ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
+                                    color: isClimbed ? '#22c55e' : 'var(--exp-paper-muted)',
+                                    borderRadius: '9999px',
+                                    padding: '2px 8px',
+                                    fontSize: '0.675rem',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    transition: 'all 0.15s ease',
+                                  }}
+                                >
+                                  <CheckCircle2 size={11} />
+                                  <span>{isClimbed ? 'CLIMBED' : 'LOG PITCH'}</span>
+                                </button>
                               </div>
                               <h3>{p.t}</h3>
                               <div className="pitch-gear">{p.tech}</div>

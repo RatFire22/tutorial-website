@@ -44,28 +44,28 @@ export default function AboutPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', margin: '2rem 0' }}>
           <div style={{ padding: '1.25rem', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
-              <Cpu size={18} color="var(--primary)" /> Frontend Systems
+              <Cloud size={18} color="#0284c7" /> High-Level Design (HLD)
             </div>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0 }}>
-              Next.js, React Server Components, TypeScript, and modern CSS architecture.
+              Distributed systems at scale: Kafka event streaming, Redis caching, database sharding, Raft consensus, and multi-region resilience.
             </p>
           </div>
 
           <div style={{ padding: '1.25rem', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
-              <Cloud size={18} color="#0284c7" /> Cloud &amp; Edge
+              <Cpu size={18} color="var(--primary)" /> Low-Level Design (LLD)
             </div>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0 }}>
-              Serverless runtimes, V8 isolates, CDN edge caching, and Vercel deployments.
+              Object-oriented craftsmanship: SOLID principles, design patterns (Strategy, State, Observer), lock-free CAS loops, and concurrency.
             </p>
           </div>
 
           <div style={{ padding: '1.25rem', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
-              <Terminal size={18} color="#ea580c" /> Systems Programming
+              <Terminal size={18} color="#ea580c" /> Autonomous AI &amp; Agents
             </div>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0 }}>
-              Rust, Tokio async runtime, Axum, and high-concurrency microservices.
+              Agentic systems from the rock-face: LangGraph cyclic loops, Model Context Protocol (MCP), tool swarms, and zero-trust sandboxes.
             </p>
           </div>
         </div>
@@ -75,20 +75,27 @@ export default function AboutPage() {
           This website is deliberately built with minimal dependencies:
         </p>
         <ul>
-          <li><strong>Next.js 15+ App Router</strong> with Static Site Generation (SSG) for instant page loads.</li>
-          <li><strong>MDX Content Pipeline</strong>: Markdown files versioned directly in Git, requiring no database.</li>
-          <li><strong>Vanilla CSS</strong> with modern design tokens, smooth dark/light transitions, and responsive grid.</li>
-          <li><strong>100% Free Vercel Hosting</strong>: Automated CI/CD, global edge distribution, and zero hosting costs.</li>
+          <li><strong>Next.js 16+ App Router (Turbopack)</strong> with Static Site Generation (SSG) for sub-millisecond initial page loads.</li>
+          <li><strong>MDX Content Pipeline</strong>: Markdown files versioned directly in Git, requiring zero runtime database latency.</li>
+          <li><strong>Vanilla CSS Design System</strong>: Bespoke design tokens, zero runtime CSS overhead, smooth dark/light transitions, and responsive grid.</li>
+          <li><strong>Vercel Global Edge Deployment</strong>: Automated CI/CD, worldwide CDN caching, and 100% edge distribution.</li>
         </ul>
 
         <h2>Connect &amp; Collaborate</h2>
         <p>
-          Feel free to reach out, suggest new tutorial topics, or connect across social channels:
+          Whether you want to prepare for senior system design rounds, suggest new architectural blueprints, or discuss advisory:
         </p>
 
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1.5rem' }}>
           <a
-            href="https://github.com"
+            href="mailto:vishwajeet@2amcoding.in"
+            className="share-action-btn"
+            style={{ padding: '0.6rem 1.2rem', fontSize: '0.95rem', background: 'var(--primary)', color: '#ffffff' }}
+          >
+            ✉️ vishwajeet@2amcoding.in
+          </a>
+          <a
+            href="https://github.com/vishwajeetgupta"
             target="_blank"
             rel="noreferrer"
             className="share-action-btn"
@@ -97,7 +104,7 @@ export default function AboutPage() {
             <GithubIcon size={16} /> GitHub
           </a>
           <a
-            href="https://twitter.com"
+            href="https://x.com/vishwajeetgupta"
             target="_blank"
             rel="noreferrer"
             className="share-action-btn"
@@ -106,7 +113,7 @@ export default function AboutPage() {
             <TwitterIcon size={16} /> Twitter / X
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://linkedin.com/in/vishwajeetgupta"
             target="_blank"
             rel="noreferrer"
             className="share-action-btn"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ArticleCard from './ArticleCard';
 import { ArticleMeta } from '@/lib/articles';
@@ -23,11 +23,40 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
         );
       });
 
+  const [subscribedEmail, setSubscribedEmail] = useState<string>('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const stored = localStorage.getItem('2amcoding_newsletter_subscriber');
+        if (stored) {
+          setSubscribed(true);
+          setSubscribedEmail(stored);
+        }
+      } catch {}
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+    const cleanEmail = email.trim();
+    if (cleanEmail && cleanEmail.includes('@') && cleanEmail.includes('.')) {
       setSubscribed(true);
+      setSubscribedEmail(cleanEmail);
+      try {
+        localStorage.setItem('2amcoding_newsletter_subscriber', cleanEmail);
+      } catch {}
     }
+  };
+
+  const handleUnsubscribe = () => {
+    setSubscribed(false);
+    setSubscribedEmail('');
+    setEmail('');
+    try {
+      localStorage.removeItem('2amcoding_newsletter_subscriber');
+    } catch {}
   };
 
   return (
@@ -228,8 +257,28 @@ export default function HomeClient({ articles }: { articles: ArticleMeta[] }) {
           </p>
 
           {subscribed ? (
-            <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
-              🎉 Thank you for subscribing! Check your inbox for the welcome issue.
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
+                🎉 You&apos;re subscribed as <strong>{subscribedEmail || email}</strong>!
+              </div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.825rem', margin: 0 }}>
+                You&apos;ll receive deep-dive HLD/LLD blueprints and autonomous agent releases directly.
+              </p>
+              <button
+                type="button"
+                onClick={handleUnsubscribe}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  fontSize: '0.75rem',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  marginTop: '0.5rem',
+                }}
+              >
+                Change or remove email
+              </button>
             </div>
           ) : (
             <form onSubmit={handleSubscribe} className="newsletter-form">
