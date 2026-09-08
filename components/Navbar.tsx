@@ -45,6 +45,14 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
               </li>
               <li>
                 <Link
+                  href="/system-design"
+                  className={`nav-link ${pathname === '/system-design' ? 'active' : ''}`}
+                >
+                  System Design
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/expedition"
                   className={`nav-link ${pathname === '/expedition' ? 'active' : ''}`}
                   style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
