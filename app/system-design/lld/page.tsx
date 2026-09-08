@@ -1,6 +1,7 @@
 import { Cpu, Layers, GitBranch, Box, CheckCircle2 } from 'lucide-react';
 import { getAllArticles } from '@/lib/articles';
 import ArticleCard from '@/components/ArticleCard';
+import LLDProblemDirectory from '@/components/LLDProblemDirectory';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -80,6 +81,9 @@ export default function LLDPage() {
           <ArticleCard key={article.slug} article={article} />
         ))}
       </div>
+
+      {/* Interactive 12 Classic LLD Problem Directory & Specs */}
+      <LLDProblemDirectory />
     </div>
   );
 }

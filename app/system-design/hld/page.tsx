@@ -1,6 +1,7 @@
 import { Network, Database, Zap, ShieldAlert, Server } from 'lucide-react';
 import { getAllArticles } from '@/lib/articles';
 import ArticleCard from '@/components/ArticleCard';
+import HLDProblemDirectory from '@/components/HLDProblemDirectory';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -80,6 +81,9 @@ export default function HLDPage() {
           <ArticleCard key={article.slug} article={article} />
         ))}
       </div>
+
+      {/* Interactive 32-System HLD Curriculum & Problem Directory */}
+      <HLDProblemDirectory />
     </div>
   );
 }
