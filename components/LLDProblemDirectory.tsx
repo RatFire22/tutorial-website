@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search, ExternalLink, Sparkles, CheckCircle2, Clock, X, Layers, Code, Check } from 'lucide-react';
 
@@ -352,6 +353,7 @@ const lldProblems: LLDProblem[] = [
 const categories = ['All', 'Resource Allocation', 'Concurrency & Queues', 'State Machines', 'Game Design', 'File & Infra'] as const;
 
 export default function LLDProblemDirectory() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [selectedProblem, setSelectedProblem] = useState<LLDProblem | null>(null);
@@ -515,7 +517,13 @@ export default function LLDProblemDirectory() {
           return (
             <div
               key={prob.id}
-              onClick={() => setSelectedProblem(prob)}
+              onClick={() => {
+                if (prob.articleSlug) {
+                  router.push(`/blog/${prob.articleSlug}`);
+                } else {
+                  setSelectedProblem(prob);
+                }
+              }}
               style={{
                 background: 'var(--bg-card)',
                 border: isPublished ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid var(--border-card)',

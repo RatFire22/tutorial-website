@@ -4,7 +4,11 @@ import { ArticleMeta } from '@/lib/articles';
 
 export default function ArticleCard({ article }: { article: ArticleMeta }) {
   return (
-    <article className="article-card">
+    <Link
+      href={`/blog/${article.slug}`}
+      className="article-card card-interactive-hover"
+      style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column' }}
+    >
       <div className="card-top-meta">
         <span className={`tag-badge ${article.tagClass}`}>
           {article.category}
@@ -15,9 +19,7 @@ export default function ArticleCard({ article }: { article: ArticleMeta }) {
         </div>
       </div>
 
-      <Link href={`/blog/${article.slug}`}>
-        <h3 className="card-title">{article.title}</h3>
-      </Link>
+      <h3 className="card-title">{article.title}</h3>
 
       <p className="card-description">{article.description}</p>
 
@@ -30,6 +32,6 @@ export default function ArticleCard({ article }: { article: ArticleMeta }) {
         </div>
         <div className="card-date">{article.date}</div>
       </div>
-    </article>
+    </Link>
   );
 }

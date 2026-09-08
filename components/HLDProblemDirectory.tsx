@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search, ExternalLink, Clock, X, Layers } from 'lucide-react';
 
@@ -345,6 +346,7 @@ const hldProblems: HLDProblem[] = [
 const categories = ['All', 'Social & Feeds', 'Streaming & Media', 'Storage & Infra', 'FinTech & E-Commerce', 'Geospatial & Real-time'] as const;
 
 export default function HLDProblemDirectory() {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedProblem, setSelectedProblem] = useState<HLDProblem | null>(null);
@@ -419,7 +421,13 @@ export default function HLDProblemDirectory() {
           return (
             <div
               key={prob.id}
-              onClick={() => setSelectedProblem(prob)}
+              onClick={() => {
+                if (prob.articleSlug) {
+                  router.push(`/blog/${prob.articleSlug}`);
+                } else {
+                  setSelectedProblem(prob);
+                }
+              }}
               style={{
                 background: 'var(--bg-card)',
                 border: isPublished ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid var(--border-card)',

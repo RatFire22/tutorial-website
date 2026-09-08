@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search, X } from 'lucide-react';
 
@@ -667,6 +668,7 @@ export const aiProblems: AIProblem[] = [
 ];
 
 export default function AIProblemDirectory() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('All');
@@ -813,7 +815,13 @@ export default function AIProblemDirectory() {
         {filteredProblems.map((p) => (
           <div
             key={p.id}
-            onClick={() => setActiveModalProblem(p)}
+            onClick={() => {
+              if (p.articleSlug) {
+                router.push(`/blog/${p.articleSlug}`);
+              } else {
+                setActiveModalProblem(p);
+              }
+            }}
             style={{
               background: 'var(--bg-card)',
               border: '1px solid var(--border-subtle)',
