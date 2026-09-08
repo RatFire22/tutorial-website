@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { ArrowLeft, Terminal, Cpu, Cloud } from 'lucide-react';
+import { Terminal, Cpu, Cloud } from 'lucide-react';
 import { GithubIcon, TwitterIcon, LinkedinIcon } from '@/components/Icons';
 import type { Metadata } from 'next';
 
@@ -11,10 +10,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="container-narrow" style={{ padding: '3.5rem 1.5rem 6rem 1.5rem' }}>
-      <Link href="/" className="back-link">
-        <ArrowLeft size={16} />
-        <span>Back to Tutorials</span>
-      </Link>
 
       <header style={{ marginBottom: '2.5rem' }}>
         <div className="author-full-meta" style={{ marginBottom: '1.5rem' }}>

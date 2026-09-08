@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { ArrowLeft, Cpu, Database, Network, ShieldCheck, Zap } from 'lucide-react';
+import { Cpu, Database, Network, ShieldCheck, Zap } from 'lucide-react';
 import { getAllArticles } from '@/lib/articles';
 import ArticleCard from '@/components/ArticleCard';
 import type { Metadata } from 'next';
@@ -22,10 +21,6 @@ export default function SystemDesignPage() {
 
   return (
     <div className="container" style={{ padding: '3.5rem 1.5rem 6rem 1.5rem' }}>
-      <Link href="/" className="back-link">
-        <ArrowLeft size={16} />
-        <span>Back to Tutorials</span>
-      </Link>
 
       <header style={{ marginBottom: '3.5rem', textAlign: 'center' }}>
         <div className="hero-badge-pill" style={{ marginBottom: '1rem' }}>

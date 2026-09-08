@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, Cpu, Bot, Zap, CheckCircle, Mail } from 'lucide-react';
+import { Cpu, Bot, Zap, CheckCircle, Mail } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,10 +10,6 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <div className="container" style={{ padding: '3.5rem 1.5rem 6rem 1.5rem' }}>
-      <Link href="/" className="back-link">
-        <ArrowLeft size={16} />
-        <span>Back to Home</span>
-      </Link>
 
       <header style={{ marginBottom: '3.5rem', textAlign: 'center' }}>
         <div className="hero-badge-pill" style={{ marginBottom: '1rem' }}>

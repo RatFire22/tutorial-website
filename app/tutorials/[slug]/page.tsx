@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { ArrowLeft, Clock, Calendar } from 'lucide-react';
+import { Clock, Calendar } from 'lucide-react';
 import { getAllArticles, getArticleBySlug } from '@/lib/articles';
 import ReadingProgress from '@/components/ReadingProgress';
 import TableOfContents from '@/components/TableOfContents';
@@ -66,11 +65,6 @@ export default async function ArticlePage({
       <div className="container">
         {/* Article Header */}
         <header className="article-page-header">
-          <Link href="/" className="back-link">
-            <ArrowLeft size={16} />
-            <span>Back to All Tutorials</span>
-          </Link>
-
           <h1 className="article-headline">{article.title}</h1>
 
           {/* Tags */}
