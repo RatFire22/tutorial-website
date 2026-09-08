@@ -12,6 +12,7 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isLearnAIOpen, setIsLearnAIOpen] = useState(false);
   const pathname = usePathname();
 
   return (
@@ -89,15 +90,98 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                   </div>
                 )}
               </li>
-              <li>
-                <Link
-                  href="/expedition"
-                  className={`nav-link ${pathname === '/expedition' ? 'active' : ''}`}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              {/* Learn AI Dropdown */}
+              <li
+                className="nav-dropdown-wrapper"
+                onMouseEnter={() => setIsLearnAIOpen(true)}
+                onMouseLeave={() => setIsLearnAIOpen(false)}
+              >
+                <button
+                  type="button"
+                  className={`nav-dropdown-trigger ${pathname === '/expedition' ? 'active' : ''}`}
+                  onClick={() => setIsLearnAIOpen(!isLearnAIOpen)}
+                  aria-expanded={isLearnAIOpen}
                 >
-                  <span>Learn AI</span>
-                  <span style={{ fontSize: '0.65rem', background: 'rgba(245, 158, 11, 0.15)', color: '#d97706', padding: '1px 6px', borderRadius: '999px', border: '1px solid rgba(245, 158, 11, 0.3)', fontWeight: 700 }}>8,848M</span>
-                </Link>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span>Learn AI</span>
+                    <span style={{ fontSize: '0.65rem', background: 'rgba(245, 158, 11, 0.15)', color: '#d97706', padding: '1px 6px', borderRadius: '999px', border: '1px solid rgba(245, 158, 11, 0.3)', fontWeight: 700 }}>8,848M</span>
+                  </span>
+                  <ChevronDown size={14} className="chevron" />
+                </button>
+
+                {isLearnAIOpen && (
+                  <div className="nav-dropdown-menu" style={{ minWidth: 270 }}>
+                    <Link
+                      href="/expedition"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>8,848M AI Expedition</span>
+                        <span style={{ fontSize: '0.65rem', color: '#d97706', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>FLAGSHIP</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Full 30-pitch interactive climb from Base Camp to Summit
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/expedition#agents"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>Autonomous Agents &amp; Swarms</span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Stage 03</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        LangGraph cyclic state machines &amp; supervisor swarms
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/expedition#mcp"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>Model Context Protocol (MCP)</span>
+                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Stage 04</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Custom MCP servers, tool discovery &amp; coding agents
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/expedition#rag"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>Production RAG &amp; Search</span>
+                        <span style={{ fontSize: '0.65rem', color: '#16a34a', background: 'rgba(34, 197, 94, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Stage 02</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Hybrid BM25 search, pgvector &amp; cross-encoder reranking
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/expedition#reliability"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>Hardened Evals &amp; Sandboxes</span>
+                        <span style={{ fontSize: '0.65rem', color: '#ef4444', background: 'rgba(239, 68, 68, 0.12)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Death Zone</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        OpenTelemetry tracing, zero-trust Docker &amp; evaluations
+                      </div>
+                    </Link>
+                  </div>
+                )}
               </li>
               <li>
                 <Link

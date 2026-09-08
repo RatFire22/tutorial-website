@@ -11,6 +11,7 @@ interface PitchItem {
 }
 
 interface StageItem {
+  id: string;
   waypoint: string;
   alt: string;
   baro: string;
@@ -23,6 +24,7 @@ interface StageItem {
 
 const rawStages = [
   {
+    id: "foundations",
     waypoint: "Base Camp",
     alt: "ELEV 5,364M",
     baro: "530 hPa · TRAILHEAD",
@@ -37,6 +39,7 @@ const rawStages = [
     ]
   },
   {
+    id: "rag",
     waypoint: "Khumbu Icefall & Camp I",
     alt: "ELEV 6,065M",
     baro: "475 hPa · ACTIVE HAZARD",
@@ -51,6 +54,7 @@ const rawStages = [
     ]
   },
   {
+    id: "agents",
     waypoint: "Camp II: The Western Cwm",
     alt: "ELEV 6,400M",
     baro: "440 hPa · VALLEY OF SILENCE",
@@ -66,6 +70,7 @@ const rawStages = [
     ]
   },
   {
+    id: "mcp",
     waypoint: "Camp III: The Lhotse Face",
     alt: "ELEV 7,200M",
     baro: "380 hPa · SHEER BLUE ICE",
@@ -81,6 +86,7 @@ const rawStages = [
     ]
   },
   {
+    id: "reliability",
     waypoint: "South Col & The Death Zone",
     alt: "ELEV 7,906M",
     baro: "355 hPa · CRITICAL SURVIVAL",
@@ -96,6 +102,7 @@ const rawStages = [
     ]
   },
   {
+    id: "summit",
     waypoint: "The Hillary Step to Summit",
     alt: "ELEV 8,848M",
     baro: "314 hPa · HIGHEST POINT ON EARTH",
@@ -203,7 +210,7 @@ export default function ExpeditionClient() {
             return (
               <div key={stage.waypoint}>
                 {/* Milestone Waypoint */}
-                <div className="waypoint">
+                <div id={stage.id} className="waypoint" style={{ scrollMarginTop: '100px' }}>
                   <div className="waypoint-badge">
                     <span className="alt-metric">{stage.alt}</span>
                     <span className="baro-metric">{stage.baro}</span>
