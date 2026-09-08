@@ -107,46 +107,18 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                 </button>
 
                 {isLearnAIOpen && (
-                  <div className="nav-dropdown-menu" style={{ minWidth: 270 }}>
+                  <div className="nav-dropdown-menu" style={{ minWidth: 290 }}>
                     <Link
-                      href="/expedition"
+                      href="/expedition#foundations"
                       className="nav-dropdown-item"
                       onClick={() => setIsLearnAIOpen(false)}
                     >
                       <div className="dropdown-item-title">
-                        <span>8,848M AI Expedition</span>
-                        <span style={{ fontSize: '0.65rem', color: '#d97706', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>FLAGSHIP</span>
+                        <span>Stage 01: Base Camp</span>
+                        <span style={{ fontSize: '0.65rem', color: '#64748b', background: 'var(--bg-surface)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>5,364M</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        Full 30-pitch interactive climb from Base Camp to Summit
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/expedition#agents"
-                      className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>Autonomous Agents &amp; Swarms</span>
-                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Stage 03</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        LangGraph cyclic state machines &amp; supervisor swarms
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/expedition#mcp"
-                      className="nav-dropdown-item"
-                      onClick={() => setIsLearnAIOpen(false)}
-                    >
-                      <div className="dropdown-item-title">
-                        <span>Model Context Protocol (MCP)</span>
-                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Stage 04</span>
-                      </div>
-                      <div className="dropdown-item-desc">
-                        Custom MCP servers, tool discovery &amp; coding agents
+                        Message schemas, token streaming &amp; structured outputs
                       </div>
                     </Link>
 
@@ -156,11 +128,39 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={() => setIsLearnAIOpen(false)}
                     >
                       <div className="dropdown-item-title">
-                        <span>Production RAG &amp; Search</span>
-                        <span style={{ fontSize: '0.65rem', color: '#16a34a', background: 'rgba(34, 197, 94, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Stage 02</span>
+                        <span>Stage 02: Camp I &amp; Icefall</span>
+                        <span style={{ fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,065M</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        Hybrid BM25 search, pgvector &amp; cross-encoder reranking
+                        Tool-calling loops, pgvector &amp; hybrid RAG reranking
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/expedition#agents"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>Stage 03: Camp II</span>
+                        <span style={{ fontSize: '0.65rem', color: 'var(--primary)', background: 'var(--primary-light)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>6,400M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        LangGraph cyclic state machines, checkpoints &amp; memory
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/expedition#mcp"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span>Stage 04: Camp III (Lhotse Face)</span>
+                        <span style={{ fontSize: '0.65rem', color: '#7c3aed', background: 'rgba(124, 58, 237, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>7,200M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Model Context Protocol (MCP) &amp; multi-agent swarms
                       </div>
                     </Link>
 
@@ -170,11 +170,27 @@ export default function Navbar({ articles = [] }: { articles?: ArticleMeta[] }) 
                       onClick={() => setIsLearnAIOpen(false)}
                     >
                       <div className="dropdown-item-title">
-                        <span>Hardened Evals &amp; Sandboxes</span>
-                        <span style={{ fontSize: '0.65rem', color: '#ef4444', background: 'rgba(239, 68, 68, 0.12)', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>Death Zone</span>
+                        <span>Stage 05: South Col (Death Zone)</span>
+                        <span style={{ fontSize: '0.65rem', color: '#ef4444', background: 'rgba(239, 68, 68, 0.12)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>7,906M</span>
                       </div>
                       <div className="dropdown-item-desc">
-                        OpenTelemetry tracing, zero-trust Docker &amp; evaluations
+                        Hardened evals, OpenTelemetry tracing &amp; sandboxes
+                      </div>
+                    </Link>
+
+                    <div style={{ height: 1, background: 'var(--border-subtle)', margin: '0.2rem 0' }} />
+
+                    <Link
+                      href="/expedition"
+                      className="nav-dropdown-item"
+                      onClick={() => setIsLearnAIOpen(false)}
+                    >
+                      <div className="dropdown-item-title">
+                        <span style={{ color: '#d97706', fontWeight: 800 }}>Stage 06: Chomolungma Summit</span>
+                        <span style={{ fontSize: '0.65rem', color: '#d97706', background: 'rgba(245, 158, 11, 0.15)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>8,848M</span>
+                      </div>
+                      <div className="dropdown-item-desc">
+                        Full 30-pitch interactive route to enterprise AI autonomy
                       </div>
                     </Link>
                   </div>
